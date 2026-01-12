@@ -1,10 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+E-commerce Platform – Next.js & Spring Boot
 
-## Getting Started
+🇺🇸 English
 
-First, run the development server:
+About
 
-```bash
+This is a full-stack e-commerce application built with Next.js (React) on the frontend and Spring Boot on the backend, using PostgreSQL as the database.
+
+The project was designed to simulate a real-world online store, focusing on scalability, clean architecture, performance, and modern development practices. It demonstrates both frontend and backend skills, with special attention to API design, authentication, and data persistence.
+
+Features
+
+🛒 Product listing and product details
+
+👤 User authentication and authorization
+
+🛍️ Shopping cart and checkout flow
+
+📦 Order management
+
+🔐 Secure REST API with Spring Boot
+
+⚡ Fast and optimized frontend with Next.js App Router
+
+🎨 Modern, responsive, and clean UI
+
+🗄️ Relational database with PostgreSQL
+
+Tech Stack
+Frontend
+
+Next.js (App Router)
+
+React
+
+TypeScript
+
+Tailwind CSS
+
+Backend
+
+Java
+
+Spring Boot
+
+Spring Web (REST API)
+
+Spring Data JPA
+
+Spring Security
+
+Database
+
+PostgreSQL
+
+Getting Started
+Frontend
+
+Install dependencies and run the development server:
+
 npm run dev
 # or
 yarn dev
@@ -12,25 +65,149 @@ yarn dev
 pnpm dev
 # or
 bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Open http://localhost:3000
+ in your browser.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You can start editing the main page in:
 
-## Learn More
+app/page.tsx
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Hot reload is enabled, so changes are applied instantly.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Backend
 
-## Deploy on Vercel
+Configure the PostgreSQL connection in application.yml or application.properties
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Run the Spring Boot application:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+./mvnw spring-boot:run
+
+
+The API will be available at:
+
+http://localhost:8080
+
+Deployment
+
+Frontend: Vercel (recommended for Next.js)
+
+Backend: Docker, VPS, or cloud providers (AWS, Railway, Render, etc.)
+
+Database: Managed PostgreSQL or self-hosted
+
+The project is structured to be production-ready and easily deployable.
+
+🇧🇷 Português
+
+Sobre
+
+Esta é uma aplicação e-commerce full stack, desenvolvida com Next.js (React) no frontend e Spring Boot no backend, utilizando PostgreSQL como banco de dados.
+
+O projeto foi pensado para simular uma loja virtual real, com foco em escalabilidade, organização de código, desempenho e boas práticas modernas de desenvolvimento. Ele demonstra habilidades tanto de frontend quanto de backend, com atenção especial à construção de APIs, autenticação e persistência de dados.
+
+Funcionalidades
+
+🛒 Listagem de produtos e página de detalhes
+
+👤 Autenticação e autorização de usuários
+
+🛍️ Carrinho de compras e fluxo de checkout
+
+📦 Gerenciamento de pedidos
+
+🔐 API REST segura com Spring Boot
+
+⚡ Alta performance com Next.js App Router
+
+🎨 Interface moderna, responsiva e limpa
+
+🗄️ Banco de dados relacional com PostgreSQL
+
+Tecnologias
+Frontend
+
+Next.js (App Router)
+
+React
+
+TypeScript
+
+Tailwind CSS
+
+Backend
+
+Java
+
+Spring Boot
+
+Spring Web (API REST)
+
+Spring Data JPA
+
+Spring Security
+
+Banco de Dados
+
+PostgreSQL
+
+Como rodar o projeto
+Frontend
+
+Instale as dependências e execute o servidor de desenvolvimento:
+
+npm run dev
+# ou
+yarn dev
+# ou
+pnpm dev
+# ou
+bun dev
+
+
+Acesse:
+
+http://localhost:3000
+
+
+A página principal pode ser editada em:
+
+app/page.tsx
+
+
+As alterações são refletidas automaticamente.
+
+Backend
+
+Configure a conexão com o PostgreSQL no application.yml ou application.properties
+
+Execute a aplicação Spring Boot:
+
+./mvnw spring-boot:run
+
+
+A API ficará disponível em:
+
+http://localhost:8080
+
+Deploy
+
+Frontend: Vercel (recomendado para Next.js)
+
+Backend: Docker, VPS ou serviços em nuvem (AWS, Railway, Render, etc.)
+
+Banco de Dados: PostgreSQL gerenciado ou local
+
+O projeto está estruturado para uso em produção e fácil escalabilidade.
+
+Author
+
+Rubens
+Full Stack Developer
+Focus on Back-end
+
+License
+
+This project is intended for personal study and portfolio use.

@@ -3,7 +3,7 @@ import { ProductProps } from "../types/product";
 
 export default function Product({ id, name, price, photo  }: ProductProps) {
   return (
-    <div className="flex flex-col mb-4 bg-(--bg-card) rounded-2xl w-80 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+    <div className="flex flex-col mb-4 bg-(--bg-card) rounded-2xl min-w-80 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
       
       <div className="flex items-center justify-center bg-white p-4">
         <Image

@@ -61,7 +61,7 @@ export default function HomePage() {
           <Product key={product.id} query={query} id={product.id} name={product.name} price={product.price} photo={product.photo}/>
         ))}
       </ul>
-      <ul className="flex flex-col">
+      <ul className="flex flex-col w-full overflow-x-auto">
         {subCategories.map(subCategory => (
           <SubCategory key={subCategory.id} id={subCategory.id} name={subCategory.name} slug={subCategory.slug}/>
         ))}

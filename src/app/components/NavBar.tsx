@@ -21,10 +21,10 @@ export default function NavBar({ onSearch }: NavBarProps) {
         items-center
         md:justify-between
         justify-center
-        gap-8
+        gap-4
         md:gap-0
         h-16
-        px-8
+        px-4
         xl:px-16
       ">
         {/* Logo */}
@@ -41,11 +41,15 @@ export default function NavBar({ onSearch }: NavBarProps) {
             placeholder="Buscar..."
             className="
               w-full
-              h-10
+              md:h-10
+              h-8
               rounded-md
               bg-(--text-main)
-              px-4
+              px-2
+              md:px-4
               pr-12
+              text-[12px]
+              md:text-[14px]
               text-(--bg-main)
               outline-none
             "
@@ -67,6 +71,7 @@ export default function NavBar({ onSearch }: NavBarProps) {
           <button
             type="submit"
             className="
+              cursor-pointer
               absolute
               right-2
               top-1/2
@@ -83,6 +88,7 @@ export default function NavBar({ onSearch }: NavBarProps) {
               width={16}
               height={16}
               alt="Buscar"
+              className="w-4 h-auto"
             />
           </button>
         </form>

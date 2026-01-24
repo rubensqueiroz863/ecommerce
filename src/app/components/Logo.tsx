@@ -5,7 +5,7 @@ export default function Logo() {
   return (
     <Link 
       href="/"
-      className={`${ArchivoBlack.className} md:flex text-(--text-main)`}
+      className={`${ArchivoBlack.className} flex text-(--text-main) text-[12px] md:text-[14px]`}
     >
       ECOMMERCE
     </Link>

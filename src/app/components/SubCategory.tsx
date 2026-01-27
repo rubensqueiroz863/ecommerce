@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { SubCategoryProps } from "../types/subCategory";
 import { ProductProps } from "../types/product";
 import Product from "./Product";
+import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function SubCategory({ name, slug }: SubCategoryProps) {
   const [products, setProducts] = useState<ProductProps[]>([]);
@@ -33,9 +35,38 @@ export default function SubCategory({ name, slug }: SubCategoryProps) {
   // 🔹 Enquanto carrega
   if (loading) {
     return (
-      <div className="px-10 w-full mt-10">
-        <h2 className="text-xl font-bold mb-4">{name}</h2>
-        <p className="animate-pulse text-gray-400">Carregando...</p>
+       <div 
+        className="px-10 w-full mt-10">
+        <h2 
+          className="text-xl font-bold mb-4"
+        >
+          {name || "Categoria"}
+        </h2>
+
+        <div className="flex gap-4 overflow-x-auto">
+            <div className={`flex flex-col mb-4 bg-(--bg-card) rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden`}>
+              
+              <div className="flex items-center justify-center bg-white p-4">
+                <Image
+                  src={"https://i.postimg.cc/7hhdqMRy/ima2311ges.png"}
+                  width={800}
+                  height={800}
+                  alt="Product photo"
+                  className="h-56 w-auto object-contain"
+                />
+              </div>
+        
+              <div className="flex flex-col gap-1 p-4">
+                <p className="text-(--text-main) font-medium line-clamp-2">
+                  Carregando...
+                </p>
+        
+                <p className="text-(--success) font-semibold text-lg">
+                  R$ 00.00
+                </p>
+              </div>
+            </div>
+        </div>
       </div>
     );
   }
@@ -46,8 +77,20 @@ export default function SubCategory({ name, slug }: SubCategoryProps) {
   }
 
   return (
-    <div className="px-10 w-full mt-10">
-      <h2 className="text-xl font-bold mb-4">{name}</h2>
+    <motion.div 
+      className="px-10 w-full mt-10"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.h2 
+        className="text-xl font-bold mb-4"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        {name}
+      </motion.h2>
 
       <div className="flex gap-4 overflow-x-auto">
         {products.map(product => (
@@ -62,6 +105,6 @@ export default function SubCategory({ name, slug }: SubCategoryProps) {
           />
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 }

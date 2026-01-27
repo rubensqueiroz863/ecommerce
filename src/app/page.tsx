@@ -50,14 +50,16 @@ export default function HomePage() {
           scrollbar-thin
         "
       >
-        {subCategories.map(subCategory => (
-          <SubCategory
-            key={subCategory.id}
-            id={subCategory.id}
-            name={subCategory.name}
-            slug={subCategory.slug}
-          />
-        ))}
+        <AnimatePresence>
+          {subCategories.map(subCategory => (
+            <SubCategory
+              key={subCategory.id}
+              id={subCategory.id}
+              name={subCategory.name}
+              slug={subCategory.slug}
+            />
+          ))}
+        </AnimatePresence>
       </ul>
       <AnimatePresence>
         {menu.isOpen && <MenuDrawer />}

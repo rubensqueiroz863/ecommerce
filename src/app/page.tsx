@@ -7,6 +7,7 @@ import SubCategory from "./components/SubCategory";
 import { useRouter } from "next/navigation";
 import { useMenu } from "@/lib/menu";
 import MenuDrawer from "./components/MenuDrawer";
+import { AnimatePresence } from "framer-motion";
 
 export default function HomePage() {
   const [subCategories, setSubCategories] = useState<SubCategoryProps[]>([]);
@@ -58,7 +59,9 @@ export default function HomePage() {
           />
         ))}
       </ul>
-      {menu.isOpen && <MenuDrawer />}
+      <AnimatePresence>
+        {menu.isOpen && <MenuDrawer />}
+      </AnimatePresence>
     </div>
   );
 }

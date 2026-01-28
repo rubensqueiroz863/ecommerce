@@ -7,6 +7,7 @@ export default function Menu() {
   const menu = useMenu();
 
   return (
+    // Botão do menu
     <button
       onClick={() => menu.toggleMenu()}
       className="flex gap-1 flex-col cursor-pointer"

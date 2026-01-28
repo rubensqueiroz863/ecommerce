@@ -24,36 +24,43 @@ export default function HomePage() {
   const router = useRouter();
   const menu = useMenu();
 
+  // Detecta se está visivel na tela
   const { ref, inView } = useInView({
     threshold: 0,
   });
 
+  // Fetch das subcategorias
   const fetchSubCategories = useCallback(async () => {
+    // detecta se está carregando ou se não tem mais
     if (loading || !hasMore) return;
 
     setLoading(true);
 
+    // Tenta fazer o fetch das subcategorias
     try {
       const res = await fetch(
         `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/subcategories?page=${page}&size=6`
       );
-
+      // Converte para json
       const data: PageResponse<SubCategoryProps> = await res.json();
-
+      // Pega a data com as subcategorias e se tem main
       setSubCategories(prev => [...prev, ...data.data]);
       setHasMore(data.hasMore);
       setPage(prev => prev + 1);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      // Erro no fetch
+      console.error(err);
     } finally {
       setLoading(false);
     }
   }, [page, hasMore, loading]);
-
+  
+  // Chama o fetch
   useEffect(() => {
     fetchSubCategories();
   }, []);
 
+  // Caso visivel, chama mais categorias
   useEffect(() => {
     if (inView) {
       fetchSubCategories();
@@ -65,7 +72,9 @@ export default function HomePage() {
   }
 
   return (
+    // Homepage
     <div className="w-full">
+      { /* NavBar */}
       <NavBar onSearch={search} />
 
       <ul
@@ -78,6 +87,7 @@ export default function HomePage() {
           py-2
         "
       >
+        { /* SubCategorias com animação */}
         <AnimatePresence>
           {subCategories.map(subCategory => (
             <SubCategory
@@ -96,7 +106,7 @@ export default function HomePage() {
           {loading ? "Carregando..." : "Carregando mais..."}
         </div>
       )}
-
+      { /* Menu drawer */}
       <AnimatePresence>
         {menu.isOpen && <MenuDrawer />}
       </AnimatePresence>

@@ -45,7 +45,7 @@ export default function SubCategory({ name, slug }: SubCategoryProps) {
     return (
       <div className="px-10 w-full mt-10">
         <h2 className="text-xl font-bold mb-4">
-          {name || "Categoria"}
+          Categoria
         </h2>
 
         <div className="flex gap-4 overflow-x-auto">
@@ -80,12 +80,14 @@ export default function SubCategory({ name, slug }: SubCategoryProps) {
   }
 
   return (
+    // Card das subcategorias
     <motion.div
       className="px-10 w-full mt-10"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
+      { /* Nome */}
       <motion.h2
         className="text-xl font-bold mb-4"
         initial={{ opacity: 0, y: 50 }}
@@ -94,7 +96,7 @@ export default function SubCategory({ name, slug }: SubCategoryProps) {
       >
         {name}
       </motion.h2>
-
+      { /* Cards dos produtos */}
       <div className="flex gap-4 overflow-x-auto">
         {products.map(product => (
           <Product
@@ -109,7 +111,7 @@ export default function SubCategory({ name, slug }: SubCategoryProps) {
         ))}
       </div>
 
-      {/* DEBUG / futuro infinite scroll */}
+      {/* futuro infinite scroll */}
       {hasMore && (
         <p className="text-sm text-gray-400 mt-2">
           Mais produtos disponíveis…

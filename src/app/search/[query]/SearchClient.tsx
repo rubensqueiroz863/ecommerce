@@ -59,18 +59,20 @@ export default function SearchClient({ query }: Props) {
     if (loading || !hasMore) return;
 
     setLoading(true);
-
+    // Tenda dar fetch dos produtos
     try {
       const res = await fetch(
         `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/produtos/buscar?name=${query}&page=${page}&size=4`
       );
-
+      // Converte para json
       const data: PageResponse<ProductProps> = await res.json();
-
+      
+      // Pega a data com os produtos e se tem mais
       setResults(prev => [...prev, ...data.data]);
       setHasMore(data.hasMore);
       setPage(prev => prev + 1);
     } catch (err) {
+      // Erro do fetch
       console.error(err);
     } finally {
       setLoading(false);
@@ -89,10 +91,12 @@ export default function SearchClient({ query }: Props) {
   }
 
   return (
+    // Pagina dos produtos pesquisados
     <div>
+      { /* Navbar */}
       <NavBar onSearch={search} />
       <div className="w-full h-px bg-(--hover-border)" />
-
+      { /* Detecta se está carregando */}
       {loading && !searched ? (
         <p className="px-4 my-4 text-(--text-main) font-bold">
           Buscando...
@@ -118,6 +122,7 @@ export default function SearchClient({ query }: Props) {
           px-4
         "
       >
+        { /* Produtos pesquisados */}
         {results.map(product => (
           <Product
             key={product.id}

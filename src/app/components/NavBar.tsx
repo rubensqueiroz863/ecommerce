@@ -15,6 +15,7 @@ export default function NavBar({ onSearch }: NavBarProps) {
   }
 
   return (
+    // Navbar
     <header className="bg-(--bg-main)">
       <div className="
         flex
@@ -83,6 +84,7 @@ export default function NavBar({ onSearch }: NavBarProps) {
               justify-center
             "
           >
+            { /* Lupa de pesquisar */}
             <Image
               src="https://i.postimg.cc/t4PGp1ZF/54481.png"
               width={16}

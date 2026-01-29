@@ -6,11 +6,7 @@ import { ProductProps } from "../types/product";
 import Product from "./Product";
 import { motion } from "framer-motion";
 import Image from "next/image";
-
-type PageResponse<T> = {
-  data: T[];
-  hasMore: boolean;
-};
+import { PageResponse } from "../types/pageResponse";
 
 export default function SubCategory({ name, slug }: SubCategoryProps) {
   const [products, setProducts] = useState<ProductProps[]>([]);

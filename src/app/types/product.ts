@@ -6,3 +6,9 @@ export type ProductProps = {
   photo: string;
   width: string;
 }
+
+export type ProductPageProps = {
+  params: Promise<{
+    id: number
+  }>
+}

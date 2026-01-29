@@ -1,11 +1,14 @@
 import Image from "next/image";
 import { ProductProps } from "../types/product";
+import Link from "next/link";
 
 export default function Product({ id, name, price, photo, width  }: ProductProps) {
  
   return (
     // Card do produto
-    <div className={`flex flex-col ${width} mb-4 bg-(--bg-card) rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden`}>
+    <Link
+      href={`/product/${id}`}
+      className={`flex flex-col ${width} mb-4 bg-(--bg-card) rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden`}>
       { /* Foto do produto */}
       <div className="flex items-center justify-center bg-white p-4">
         <Image
@@ -26,6 +29,6 @@ export default function Product({ id, name, price, photo, width  }: ProductProps
           R$ {price}
         </p>
       </div>
-    </div>
+    </Link>
   )
 }

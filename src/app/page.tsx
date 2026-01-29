@@ -9,11 +9,7 @@ import { useMenu } from "@/lib/menu";
 import MenuDrawer from "./components/MenuDrawer";
 import { AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-
-type PageResponse<T> = {
-  data: T[];
-  hasMore: boolean;
-};
+import { PageResponse } from "./types/pageResponse";
 
 export default function HomePage() {
   const [subCategories, setSubCategories] = useState<SubCategoryProps[]>([]);

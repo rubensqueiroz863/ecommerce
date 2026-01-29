@@ -6,14 +6,10 @@ import Product from "@/app/components/Product";
 import { useRouter } from "next/navigation";
 import NavBar from "@/app/components/NavBar";
 import { useInView } from "react-intersection-observer";
+import { PageResponse } from "@/app/types/pageResponse";
 
 type Props = {
   query: string;
-};
-
-type PageResponse<T> = {
-  data: T[];
-  hasMore: boolean;
 };
 
 export default function SearchClient({ query }: Props) {

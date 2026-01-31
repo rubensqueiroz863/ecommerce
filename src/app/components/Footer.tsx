@@ -4,7 +4,7 @@ export default function Footer() {
 
   return (
     <div className="flex items-center w-full gap-2 flex-col text-[12px] md:text-[18px] md:px-0 px-16 justify-center pt-16 pb-12">
-      <div className="flex gap-1.5 items-center w-full text-(--text-main)/80 dark:text-(--text-main)/80">
+      <div className="flex gap-1.5 items-center justify-center w-full text-(--text-main)/80 dark:text-(--text-main)/80">
         <p className="w-20">Built with:</p>
         <Image
           src={"https://i.postimg.cc/Zqc6YScN/nextjs-original.png"}

@@ -5,6 +5,7 @@ import Logo from "./Logo";
 import Menu from "./Menu";
 import { NavBarProps } from "../types/navbar";
 import Image from "next/image";
+import Cart from "./Cart";
 
 export default function NavBar({ onSearch }: NavBarProps) {
   const [query, setQuery] = useState("");
@@ -96,7 +97,10 @@ export default function NavBar({ onSearch }: NavBarProps) {
         </form>
 
         {/* Menu */}
-        <Menu />
+        <div className="flex gap-8 items-center justify-center">
+          <Cart />
+          <Menu />
+        </div>
       </div>
     </header>
   );

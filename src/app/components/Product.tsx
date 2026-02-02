@@ -12,7 +12,7 @@ export default function Product({ id, name, price, photo, width  }: ProductProps
       { /* Foto do produto */}
       <div className="flex items-center justify-center bg-white p-4">
         <Image
-          src={photo}
+          src={photo || "https://i.postimg.cc/pXsJJ92z/526867-200.png"}
           width={800}
           height={800}
           alt="Product photo"

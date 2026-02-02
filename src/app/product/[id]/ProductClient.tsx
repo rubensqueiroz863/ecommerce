@@ -72,7 +72,7 @@ export default function ProductClient({ id }: Props) {
           {/* Imagem do produto */}
           <div className="bg-white rounded-2xl shadow-sm flex items-center justify-center p-6">
             <img
-              src={product?.photo || "/placeholder.png"}
+              src={product?.photo || "https://i.postimg.cc/pXsJJ92z/526867-200.png"}
               alt={product?.name}
               className="max-h-80 object-contain"
             />

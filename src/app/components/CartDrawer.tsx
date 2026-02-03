@@ -62,6 +62,7 @@ export default function CartDrawer() {
             name={item.name} 
             price={item.price} 
             photo={item.photo} 
+            product={item}
           />
         )}
       </motion.div>

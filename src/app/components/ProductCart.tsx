@@ -1,8 +1,9 @@
 import Image from "next/image";
-import { ProductProps } from "../types/product";
+import { ProductCartProps } from "../types/product";
+import { useCart } from "@/lib/cart";
 
-export default function ProductCart({ id, name, price, photo, width  }: ProductProps) {
- 
+export default function ProductCart({ id, name, price, photo, width, product  }: ProductCartProps) {
+  const cart = useCart();
   return (
     // Card do produto
     <div
@@ -26,6 +27,15 @@ export default function ProductCart({ id, name, price, photo, width  }: ProductP
         <p className="text-(--success) font-semibold text-lg">
           R$ {price}
         </p>
+        <button
+          className="py-1 px-2 bg-red-600 hover:opacity-90 transition-all cursor-pointer rounded-md mt-2 text-sm"
+          onClick={() => cart.removeProduct(product)}
+        >
+          Remover Produto
+        </button>
+        <button className="py-1 px-2 bg-green-600 hover:opacity-90 transition-all cursor-pointer rounded-md mt-2 text-sm">
+          Comprar Produto
+        </button>
       </div>
     </div>
   )

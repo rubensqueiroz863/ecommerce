@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 
 export const useCart = create<CartState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       cart: [],
       addProduct: (item) =>
         set((state) => {
@@ -17,7 +17,9 @@ export const useCart = create<CartState>()(
           ...state,
           cart: state.cart.filter((p) => p.id !== item.id),
         })),
-
+      isOnCart: (product) => {
+        return get().cart.some((p) => p.id === product.id);
+      },
       isOpen: false,
       toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
       onCheckout: 'cart',

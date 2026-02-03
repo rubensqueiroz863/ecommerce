@@ -1,5 +1,6 @@
 "use client";
 
+import CartButton from "@/app/components/CartButton";
 import CartDrawer from "@/app/components/CartDrawer";
 import Footer from "@/app/components/Footer";
 import MenuDrawer from "@/app/components/MenuDrawer";
@@ -104,12 +105,7 @@ export default function ProductClient({ id }: Props) {
             >
               Comprar
             </button>
-            <button
-              className="cursor-pointer w-full px-8 py-3 bg-(--text-secondary) text-(--bg-secondary) rounded-xl
-                        hover:opacity-90 transition"
-            >
-              Adicionar ao carrinho
-            </button>
+            <CartButton product={product!} />
           </div>
         </div>
       </div>

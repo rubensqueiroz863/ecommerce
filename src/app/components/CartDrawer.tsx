@@ -2,6 +2,8 @@ import { useCart } from "@/lib/cart";
 import { motion } from "framer-motion";
 import { ProductProps } from "../types/product";
 import ProductCart from "./ProductCart";
+import CartButton from "./CartButton";
+import CloseCartButton from "./CloseCartButton";
 
 export default function CartDrawer() {
   const cartMenu = useCart();
@@ -29,6 +31,7 @@ export default function CartDrawer() {
           fixed top-0 left-0
           xl:w-1/4
           md:w-3/6
+          w-full
           w-1/2
           h-screen
           bg-(--bg-secondary)
@@ -42,13 +45,11 @@ export default function CartDrawer() {
         initial={{ x: "-100%" }}
         animate={{ x: 0 }}
         exit={{ x: "-100%"}}
-        transition={{ duration: 0.2, ease: "easeInOut" }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
       >
-        <div className="w-full mt-4 px-2">
-          <div className="w-full h-px bg-(--text-muted)" />
-        </div>
-        <div className="flex flex-col w-full gap-2 py-4 px-3">
+        <div className="flex flex-row items-center justify-between w-full py-4 px-3">
           <p>Your Cart</p>
+          <CloseCartButton />
         </div>
         <div className="w-full mb-8 px-2">
           <div className="w-full h-px bg-(--text-muted)" />

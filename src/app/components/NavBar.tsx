@@ -25,9 +25,10 @@ export default function NavBar({ onSearch }: NavBarProps) {
         justify-center
         gap-4
         md:gap-0
-        h-16
+        h-20
         px-4
         xl:px-16
+        bg-(--bg-main)
       ">
         {/* Logo */}
         <Logo />

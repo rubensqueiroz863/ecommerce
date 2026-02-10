@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ecommerce",
-  description: "Meu app ecommerce, utilizando nextjs e react",
+  title: "NexaShop",
+  description: "Meu app de e-commerce, utilizando Next.js, e Spring Boot de backend.",
 };
 
 export default function RootLayout({

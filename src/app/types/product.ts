@@ -1,5 +1,5 @@
 export type ProductProps = {
-  id: number;
+  id: string;
   name: string;
   price: number;
   query: string;
@@ -8,7 +8,7 @@ export type ProductProps = {
 }
 
 export type ProductCartProps = {
-  id: number;
+  id: string;
   name: string;
   price: number;
   query: string;
@@ -19,6 +19,6 @@ export type ProductCartProps = {
 
 export type ProductPageProps = {
   params: Promise<{
-    id: number
+    id: string
   }>
 }

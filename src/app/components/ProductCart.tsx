@@ -1,9 +1,26 @@
 import Image from "next/image";
 import { ProductCartProps } from "../types/product";
 import { useCart } from "@/lib/cart";
+import { useRouter } from "next/navigation";
+
+function isAuthenticated() {
+  if (globalThis.window === undefined) return false;
+  return !!localStorage.getItem("token");
+}
 
 export default function ProductCart({ id, name, price, photo, width, product  }: ProductCartProps) {
   const cart = useCart();
+  const router = useRouter();
+
+  const handleBuy = () => {
+    if (!isAuthenticated()) {
+      router.push(`/login?redirect=/product/${id}`);
+      return;
+    }
+
+    console.log("Comprar produto:", product);
+  };
+
   return (
     // Card do produto
     <div
@@ -11,7 +28,7 @@ export default function ProductCart({ id, name, price, photo, width, product  }:
       { /* Foto do produto */}
       <div className="flex items-center justify-center bg-white p-4">
         <Image
-          src={photo || "https://i.postimg.cc/pXsJJ92z/526867-200.png"}
+          src={"https://i.postimg.cc/pXsJJ92z/526867-200.png"}
           width={800}
           height={800}
           alt="Product photo"
@@ -33,7 +50,10 @@ export default function ProductCart({ id, name, price, photo, width, product  }:
         >
           Remover Produto
         </button>
-        <button className="py-1 px-2 bg-green-600 hover:opacity-90 transition-all cursor-pointer rounded-md mt-2 text-sm">
+        <button 
+          onClick={handleBuy}
+          className="py-1 px-2 bg-green-600 hover:opacity-90 transition-all cursor-pointer rounded-md mt-2 text-sm"
+        >
           Comprar Produto
         </button>
       </div>

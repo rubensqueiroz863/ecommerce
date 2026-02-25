@@ -13,10 +13,15 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Props = {
-  id: number;
+  id: string;
 };
 
-export default function ProductClient({ id }: Props) {
+function isAuthenticated() {
+  if (globalThis.window === undefined) return false;
+  return !!localStorage.getItem("token");
+}
+
+export default function ProductClient({ id }: Readonly<Props>) {
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState<ProductProps | null>(null);
 
@@ -46,6 +51,15 @@ export default function ProductClient({ id }: Props) {
   function search(query: string) {
     router.push(`/search/${query}`);
   }
+
+  const handleBuy = () => {
+    if (!isAuthenticated()) {
+      router.push(`/login?redirect=/product/${id}`);
+      return;
+    }
+
+    console.log("Comprar produto:", product);
+  };
 
   if (loading) {
     return (
@@ -80,7 +94,7 @@ export default function ProductClient({ id }: Props) {
           {/* Imagem do produto */}
           <div className="bg-white rounded-2xl shadow-sm flex items-center justify-center p-6">
             <img
-              src={product?.photo || "https://i.postimg.cc/pXsJJ92z/526867-200.png"}
+              src={"https://i.postimg.cc/pXsJJ92z/526867-200.png"}
               alt={product?.name}
               className="max-h-80 object-contain"
             />
@@ -100,8 +114,8 @@ export default function ProductClient({ id }: Props) {
               R$ {product?.price}
             </span>
             <button
-              className="cursor-pointer mt-6 px-8 py-3 bg-green-600 w-full text-(--text-main) rounded-xl
-                        hover:opacity-90 transition"
+              onClick={handleBuy}
+              className="cursor-pointer mt-6 px-8 py-3 bg-green-600 w-full text-(--text-main) rounded-xl hover:opacity-90 transition"
             >
               Comprar
             </button>

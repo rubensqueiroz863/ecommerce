@@ -31,7 +31,6 @@ export default function CartDrawer() {
           xl:w-1/4
           md:w-3/6
           w-full
-          w-1/2
           h-screen
           bg-(--bg-secondary)
           z-50

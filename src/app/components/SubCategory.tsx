@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { PageResponse } from "../types/pageResponse";
 
-export default function SubCategory({ name, slug }: SubCategoryProps) {
+export default function SubCategory({ name, slug }: Readonly<SubCategoryProps>) {
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);

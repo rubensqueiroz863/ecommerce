@@ -1,119 +1,183 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import NavBar from "./components/NavBar";
-import { SubCategoryProps } from "./types/subCategory";
-import SubCategory from "./components/SubCategory";
 import { useRouter } from "next/navigation";
-import { useMenu } from "@/lib/menu";
-import MenuDrawer from "./components/MenuDrawer";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { PageResponse } from "./types/pageResponse";
-import Footer from "./components/Footer";
+
+import NavBar from "./components/NavBar";
+import SubCategory from "./components/SubCategory";
+import Product from "./components/Product";
+import MenuDrawer from "./components/MenuDrawer";
 import CartDrawer from "./components/CartDrawer";
+import Footer from "./components/Footer";
+
+import { SubCategoryProps } from "./types/subCategory";
+import { ProductProps } from "./types/product";
+import { PageResponse } from "./types/pageResponse";
+
+import { useMenu } from "@/lib/menu";
 import { useCart } from "@/lib/cart";
+import { useAuth } from "@/hooks/useAuth";
+
+
+interface MostClickedProductDTO {
+  product: ProductProps;
+  clicks: number;
+}
 
 export default function HomePage() {
   const [subCategories, setSubCategories] = useState<SubCategoryProps[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [forYou, setForYou] = useState<MostClickedProductDTO[]>([]);
 
   const router = useRouter();
   const menu = useMenu();
   const cart = useCart();
+  const { user } = useAuth();
 
-  // Detecta se está visivel na tela
-  const { ref, inView } = useInView({
-    threshold: 0,
-  });
+  // Detecta se está visível na tela (sentinela para infinite scroll)
+  const { ref, inView } = useInView({ threshold: 0 });
 
-  // Fetch das subcategorias
+  // =========================
+  // Fetch Subcategorias
+  // =========================
   const fetchSubCategories = useCallback(async () => {
-    // detecta se está carregando ou se não tem mais
     if (loading || !hasMore) return;
 
     setLoading(true);
-
-    // Tenta fazer o fetch das subcategorias
     try {
       const res = await fetch(
         `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/subcategories?page=${page}&size=6`
       );
-      // Converte para json
       const data: PageResponse<SubCategoryProps> = await res.json();
-      // Pega a data com as subcategorias e se tem main
+
       setSubCategories(prev => [...prev, ...data.data]);
       setHasMore(data.hasMore);
       setPage(prev => prev + 1);
     } catch (err) {
-      // Erro no fetch
-      console.error(err);
+      console.error("Erro ao buscar subcategorias:", err);
     } finally {
       setLoading(false);
     }
   }, [page, hasMore, loading]);
-  
-  // Chama o fetch
+
+  // =========================
+  // Fetch Produtos Mais Clicados
+  // =========================
+  async function fetchMostClicked(userId: string, limit: number = 10) {
+    try {
+      const res = await fetch(
+        `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/analytics/users/${userId}/most-clicked?limit=${limit}`,
+        {
+          headers: { Accept: "application/json" },
+        }
+      );
+
+      if (!res.ok) throw new Error(`Erro ao buscar produtos: ${res.status}`);
+      const data: MostClickedProductDTO[] = await res.json();
+      return data;
+    } catch (err) {
+      console.error(err);
+      return [];
+    }
+  }
+
+  // =========================
+  // Carrega produtos "Para Você" quando o usuário está logado
+  // =========================
+  useEffect(() => {
+    if (!user) return;
+
+    async function loadForYou() {
+      const data = await fetchMostClicked(user!.id, 10);
+      setForYou(data);
+    }
+
+    loadForYou();
+  }, [user?.id]);
+
   useEffect(() => {
     fetchSubCategories();
   }, []);
 
-  // Caso visivel, chama mais categorias
   useEffect(() => {
-    if (inView) {
-      fetchSubCategories();
-    }
+    if (inView) fetchSubCategories();
   }, [inView, fetchSubCategories]);
+
 
   function search(query: string) {
     router.push(`/search/${query}`);
   }
 
   return (
-    // Homepage
     <div className="w-full">
-      { /* NavBar */}
       <NavBar onSearch={search} />
+    
+      {!!(forYou.length) && <ul className="flex flex-col gap-3 w-full px-2 py-2">
+        {/* Produtos "Para Você" */}
+        <motion.div
+          className="px-10 w-full mt-10"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          { /* Nome */}
+          <motion.h2
+            className="text-xl font-bold mb-4"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Para você
+          </motion.h2>
+          <div className="flex gap-4 overflow-x-auto">
+            {forYou.map(({ product, clicks }) => (
+              <div key={`product-${product.id}`} className="flex flex-col items-start gap-1">
+                {/* Mostra os clicks para teste: <span className="text-sm text-gray-500">Clicks: {clicks}</span> */}
 
-      <ul
-        className="
-          flex
-          flex-col
-          gap-3
-          w-full
-          px-2
-          py-2
-        "
-      >
-        { /* SubCategorias com animação */}
+                {/* Componente Product */}
+                <Product
+                  id={product.id}
+                  name={product.name}
+                  price={product.price}
+                  width="min-w-xs max-w-xs"
+                  query=""
+                  photo={product.photo || ""}
+                />
+              </div>
+            ))}
+          </div>
+        </motion.div>
+        
+      </ul>}
+      {/* Subcategorias */}
         <AnimatePresence>
           {subCategories.map(subCategory => (
             <SubCategory
-              key={subCategory.id}
+              key={`sub-${subCategory.id}`} // ✅ Prefixo evita conflito de keys
               id={subCategory.id}
               name={subCategory.name}
               slug={subCategory.slug}
             />
           ))}
         </AnimatePresence>
-      </ul>
-
-      {/* 🔽 SENTINELA DO INFINITE SCROLL */}
+      {/* Sentinela Infinite Scroll */}
       {hasMore && (
-        <div ref={ref} className="py-4 mb-[500px] text-center text-sm text-gray-400">
+        <div
+          ref={ref}
+          className="py-4 mb-[500px] text-center text-sm text-gray-400"
+        >
           {loading ? "Carregando..." : "Carregando mais..."}
         </div>
       )}
-      { /* Menu drawer */}
-      <AnimatePresence>
-        {menu.isOpen && <MenuDrawer />}
-      </AnimatePresence>
-      { /* Cart drawer */}
-      <AnimatePresence>
-        {cart.isOpen && <CartDrawer />}
-      </AnimatePresence>
+
+      {/* Drawers */}
+      <AnimatePresence>{menu.isOpen && <MenuDrawer />}</AnimatePresence>
+      <AnimatePresence>{cart.isOpen && <CartDrawer />}</AnimatePresence>
+
       <div className="w-full h-px bg-(--soft-border) mt-30 md:mt-35" />
       <Footer />
     </div>

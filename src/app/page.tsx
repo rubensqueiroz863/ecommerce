@@ -24,8 +24,22 @@ interface MostClickedProductDTO {
   product: ProductProps;
   clicks: number;
 }
+
 function ramdomKey(max: number): number {
   return Math.floor(Math.random() * max);
+}
+
+export interface UserRecommendation {
+  productId: string;
+  productName: string;
+  productPrice: number;
+  usersInCommon: number;
+}
+
+export interface UserRecommendationGroup {
+  userId: string;
+  userName: string;
+  recommendations: UserRecommendation[];
 }
 
 export default function HomePage() {
@@ -34,6 +48,7 @@ export default function HomePage() {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [forYou, setForYou] = useState<MostClickedProductDTO[]>([]);
+  const [userRecommendations, setRecommendations] = useState<UserRecommendationGroup | undefined>(undefined);
 
   const router = useRouter();
   const menu = useMenu();
@@ -82,12 +97,34 @@ export default function HomePage() {
     }
   }
 
+  async function fetchRecommendations(userId: string) {
+    try {
+      const res = await fetch(
+        `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/user/recommendations/${userId}`,
+        {
+          headers: { Accept: "application/json" },
+        }
+      );
+
+      if (!res.ok) throw new Error(`Erro ao buscar produtos: ${res.status}`);
+      
+      const data: UserRecommendationGroup = await res.json();
+      
+      return data;
+
+    } catch (err) {
+      console.error(err);
+      return undefined;
+    }
+  }
   useEffect(() => {
     if (!user) return;
 
     async function loadForYou() {
-      const data = await fetchMostClicked(user!.id, 10);
-      setForYou(data);
+      const forYouData = await fetchMostClicked(user!.id, 10);
+      const recommendationsData = await fetchRecommendations(user!.id);
+      setForYou(forYouData);
+      setRecommendations(recommendationsData);
     }
 
     loadForYou();
@@ -110,43 +147,79 @@ export default function HomePage() {
     <div className="w-full">
       <NavBar onSearch={search} />
     
-      {forYou && <ul className="flex flex-col gap-3 w-full px-2 py-2">
-        {/* Produtos "Para Você" */}
-        <motion.div
-          className="px-10 w-full mt-10"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          { /* Nome */}
+      {forYou.length > 0 && 
+        <ul className="flex flex-col gap-3 w-full px-2 py-2">
+          {/* Produtos "Para Você" */}
+          <motion.div
+            className="px-10 w-full mt-10"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            { /* Nome */}
+            <motion.h2
+              className="text-xl font-bold mb-4"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              Para você
+            </motion.h2>
+            <div className="flex gap-4 overflow-x-auto">
+              {forYou.map(({ product, clicks }) => (
+                <div key={`product-${product.id + ramdomKey(10000000000000)}`} className="flex flex-col items-start gap-1">
+                  {/* Mostra os clicks para teste: <span className="text-sm text-gray-500">Clicks: {clicks}</span> */}
+
+                  {/* Componente Product */}
+                  <Product
+                    id={product.id}
+                    name={product.name}
+                    price={product.price}
+                    width="min-w-xs max-w-xs"
+                    query=""
+                    photo={product.photo || ""}
+                  />
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </ul>
+      }
+      {userRecommendations && userRecommendations?.recommendations?.length > 0 && (
+        <div className="px-10 w-full mt-10">
           <motion.h2
             className="text-xl font-bold mb-4"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            Para você
+            Recomendações
           </motion.h2>
-          <div className="flex gap-4 overflow-x-auto">
-            {forYou.map(({ product, clicks }) => (
-              <div key={`product-${product.id + ramdomKey(10000000000000)}`} className="flex flex-col items-start gap-1">
-                {/* Mostra os clicks para teste: <span className="text-sm text-gray-500">Clicks: {clicks}</span> */}
 
-                {/* Componente Product */}
+          <div className="flex gap-4 overflow-x-auto">
+            {userRecommendations?.recommendations.map((rec) => (
+              <div
+                key={`product-${rec.productId}`}
+                className="flex flex-col items-start gap-1"
+              >
+                {/* Exemplo: mostrar usersInCommon */}
+                <span className="text-sm text-gray-500">
+                  {rec.usersInCommon} usuários em comum
+                </span>
+
                 <Product
-                  id={product.id}
-                  name={product.name}
-                  price={product.price}
+                  id={rec.productId}
+                  name={rec.productName}
+                  price={rec.productPrice}
                   width="min-w-xs max-w-xs"
                   query=""
-                  photo={product.photo || ""}
+                  photo=""
                 />
               </div>
             ))}
           </div>
-        </motion.div>
-        
-      </ul>}
+        </div>
+      )}
       {/* Subcategorias */}
         <AnimatePresence>
           {subCategories.map(subCategory => (

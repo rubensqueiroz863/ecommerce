@@ -20,10 +20,12 @@ import { useMenu } from "@/lib/menu";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/hooks/useAuth";
 
-
 interface MostClickedProductDTO {
   product: ProductProps;
   clicks: number;
+}
+function ramdomKey(max: number): number {
+  return Math.floor(Math.random() * max);
 }
 
 export default function HomePage() {
@@ -41,9 +43,6 @@ export default function HomePage() {
   // Detecta se está visível na tela (sentinela para infinite scroll)
   const { ref, inView } = useInView({ threshold: 0 });
 
-  // =========================
-  // Fetch Subcategorias
-  // =========================
   const fetchSubCategories = useCallback(async () => {
     if (loading || !hasMore) return;
 
@@ -64,10 +63,8 @@ export default function HomePage() {
     }
   }, [page, hasMore, loading]);
 
-  // =========================
-  // Fetch Produtos Mais Clicados
-  // =========================
   async function fetchMostClicked(userId: string, limit: number = 10) {
+    console.log(userId);
     try {
       const res = await fetch(
         `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/analytics/users/${userId}/most-clicked?limit=${limit}`,
@@ -85,9 +82,6 @@ export default function HomePage() {
     }
   }
 
-  // =========================
-  // Carrega produtos "Para Você" quando o usuário está logado
-  // =========================
   useEffect(() => {
     if (!user) return;
 
@@ -116,7 +110,7 @@ export default function HomePage() {
     <div className="w-full">
       <NavBar onSearch={search} />
     
-      {!!(forYou.length) && <ul className="flex flex-col gap-3 w-full px-2 py-2">
+      {forYou && <ul className="flex flex-col gap-3 w-full px-2 py-2">
         {/* Produtos "Para Você" */}
         <motion.div
           className="px-10 w-full mt-10"
@@ -135,7 +129,7 @@ export default function HomePage() {
           </motion.h2>
           <div className="flex gap-4 overflow-x-auto">
             {forYou.map(({ product, clicks }) => (
-              <div key={`product-${product.id}`} className="flex flex-col items-start gap-1">
+              <div key={`product-${product.id + ramdomKey(10000000000000)}`} className="flex flex-col items-start gap-1">
                 {/* Mostra os clicks para teste: <span className="text-sm text-gray-500">Clicks: {clicks}</span> */}
 
                 {/* Componente Product */}
@@ -157,7 +151,7 @@ export default function HomePage() {
         <AnimatePresence>
           {subCategories.map(subCategory => (
             <SubCategory
-              key={`sub-${subCategory.id}`} // ✅ Prefixo evita conflito de keys
+              key={`sub-${subCategory.id + ramdomKey(10000000000000)}`} // ✅ Prefixo evita conflito de keys
               id={subCategory.id}
               name={subCategory.name}
               slug={subCategory.slug}
@@ -168,7 +162,7 @@ export default function HomePage() {
       {hasMore && (
         <div
           ref={ref}
-          className="py-4 mb-[500px] text-center text-sm text-gray-400"
+          className="py-4 mb-125 text-center text-sm text-gray-400"
         >
           {loading ? "Carregando..." : "Carregando mais..."}
         </div>

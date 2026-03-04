@@ -9,23 +9,70 @@ type ClickRequest = {
   userEmail: string;
 };
 
+export type Role = "ROLE_USER" | "ROLE_ADMIN";
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface SubCategory {
+  id: string;
+  name: string;
+  slug: string;
+  category: Category;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  photo: string;
+  subCategory: SubCategory;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  password: string;
+  name: string;
+  role: Role;
+}
+
+export interface ClickEventDTO {
+  id: string;
+  user: User;
+  product: Product;
+}
+
 async function registerClick(clickEvent: ClickRequest) {
-  const response = await fetch(
-    "https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/click",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(clickEvent),
+  try {
+    const response = await fetch(
+      "https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/click",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(clickEvent),
+      }
+    );
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        // usuário não autenticado → apenas ignora
+        return;
+      }
+
+      // outros erros
+      throw new Error(`Erro HTTP: ${response.status}`);
     }
-  );
 
-  if (!response.ok) {
-    throw new Error("Erro ao registrar click");
+    return await response.json();
+  } catch (err) {
+    console.log("Erro de rede:", err);
   }
-
-  return response.json();
 }
 
 export default function Product({
@@ -37,9 +84,9 @@ export default function Product({
   const router = useRouter();
 
   const userEmail =
-    typeof window !== "undefined"
-      ? localStorage.getItem("userEmail")
-      : null;
+    globalThis.window === undefined
+      ? null
+      : localStorage.getItem("userEmail");
 
   const handleClick = async () => {
     try {
@@ -49,15 +96,15 @@ export default function Product({
           userEmail,
         });
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.log(err);
     }
 
     router.push(`/product/${id}`);
   };
 
   return (
-    <div
+    <button
       onClick={handleClick}
       className={`cursor-pointer flex flex-col ${width} mb-4 bg-(--bg-card) rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden`}
     >
@@ -80,6 +127,6 @@ export default function Product({
           R$ {price}
         </p>
       </div>
-    </div>
+    </button>
   );
 }

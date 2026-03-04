@@ -60,7 +60,7 @@ export default function RegisterForm({ redirectTo }: Readonly<Props>) {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("userEmail", data.email);
-
+      document.cookie = `token=${data.token}; path=/`;
       router.push(redirectTo || "/");
     } catch (err) {
       console.error(err);

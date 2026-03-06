@@ -27,7 +27,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
   async function fetchLastSearchs(userId: string) {
     try {
       const res = await fetch(
-        `http://localhost:8080/search-history/last/${userId}`,
+        `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/search-history/last/${userId}`,
         {
           headers: { Accept: "application/json" },
         }
@@ -47,7 +47,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
 
   async function registerSearch(query: string, userEmail: string) {
     try {
-      const response = await fetch("http://localhost:8080/search-history/search", {
+      const response = await fetch("https://sticky-charil-react-blog-3b39d9e9.koyeb.app/search-history/search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

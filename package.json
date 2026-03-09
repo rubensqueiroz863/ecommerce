@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.3.0",
     "framer-motion": "^12.29.2",
     "next": "^16.1.6",
     "next-themes": "^0.4.6",
@@ -16,6 +17,7 @@
     "react-dom": "19.2.3",
     "react-intersection-observer": "^10.0.2",
     "recharts": "^3.7.0",
+    "sockjs-client": "^1.6.1",
     "zustand": "^5.0.10"
   },
   "devDependencies": {
@@ -23,6 +25,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/sockjs-client": "^1.5.4",
+    "@types/stompjs": "^2.3.10",
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "tailwindcss": "^4",

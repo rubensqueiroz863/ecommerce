@@ -136,6 +136,7 @@ export default function SearchClient({ query }: Props) {
             name={product.name}
             price={product.price}
             photo={product.photo}
+            role="user"
           />
         ))}
       </ul>

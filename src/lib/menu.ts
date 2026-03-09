@@ -8,3 +8,11 @@ export const useMenu = create<MenuState>((set) => ({
   openMenu: () => set({ isOpen: true }),
   closeMenu: () => set({ isOpen: false }),
 }));
+
+// Menu da navbar admin
+export const useAdminMenu = create<MenuState>((set) => ({
+  isOpen: false,
+  toggleMenu: () => set((state) => ({ isOpen: !state.isOpen })),
+  openMenu: () => set({ isOpen: true }),
+  closeMenu: () => set({ isOpen: false }),
+}));

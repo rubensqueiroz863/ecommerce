@@ -178,6 +178,7 @@ export default function HomePage() {
                     width="min-w-xs max-w-xs"
                     query=""
                     photo={product.photo || ""}
+                    role="user"
                   />
                 </div>
               ))}
@@ -214,6 +215,7 @@ export default function HomePage() {
                   width="min-w-xs max-w-xs"
                   query=""
                   photo=""
+                  role="user"
                 />
               </div>
             ))}
@@ -228,6 +230,7 @@ export default function HomePage() {
               id={subCategory.id}
               name={subCategory.name}
               slug={subCategory.slug}
+              role="user"
             />
           ))}
         </AnimatePresence>

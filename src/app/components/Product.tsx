@@ -79,7 +79,9 @@ export default function Product({
   id,
   name,
   price,
+  photo,
   width,
+  role
 }: Readonly<ProductProps>) {
   const router = useRouter();
 

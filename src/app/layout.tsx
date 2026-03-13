@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
@@ -18,11 +18,16 @@ export const metadata: Metadata = {
   description: "Meu app de e-commerce, utilizando Next.js, e Spring Boot de backend.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -35,7 +40,6 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
-        
       </body>
     </html>
   );

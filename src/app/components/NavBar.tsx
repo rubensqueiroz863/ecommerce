@@ -23,6 +23,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [lastSearchs, setLastSearchs] = useState<SearchHistoryDTO[]>([]);
+  const [selected, setSelected] = useState<"shop" | "home" | "about" | "contact">("shop");
   const { user } = useAuth();
 
   async function fetchLastSearchs(userId: string) {
@@ -93,16 +94,32 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
       <div className="bg-(--bg-card) h-20 md:h-28 rounded-b-4xl">
         <div className="flex px-8 justify-center items-center h-8 md:h-12 bg-(--bg-secondary) rounded-b-2xl">
           <div className={`flex text-sm xl:text-[16px] ${OpenSans.className} flex-row gap-2 justify-between`}>
-            <Link className="hover:opacity-70 duration-500 transition-colors" href={"/"}>
+            <Link 
+              className={`hover:opacity-70 rounded-full px-2 ${selected === "shop" ? "border border-(--primary-color) text-(--primary-color)" : ""} duration-500 transition-colors`}
+              href={"/"}
+              onClick={() => setSelected("shop")}
+            >
               Shop
             </Link>
-            <Link className="hover:opacity-70 duration-500 transition-colors" href={"/home"}>
+            <Link 
+              className={`hover:opacity-70 rounded-full px-2 ${selected === "home" ? "border border-(--primary-color) text-(--primary-color)" : ""} duration-500 transition-colors`}
+              href={"/"}
+              onClick={() => setSelected("home")}
+            >
               Home
             </Link>
-            <Link className="hover:opacity-70 opacity-60 duration-500 transition-colors" href={"/about"}>
+            <Link 
+              className={`hover:opacity-70 rounded-full px-2 ${selected === "about" ? "border border-(--primary-color) text-(--primary-color)" : ""} duration-500 transition-colors`}
+              href={"/"}
+              onClick={() => setSelected("about")}
+            >
               About
             </Link>
-            <Link className="hover:opacity-70 opacity-60 duration-500 transition-colors" href={"/contact"}>
+            <Link 
+              className={`hover:opacity-70 rounded-full px-2 ${selected === "contact" ? "border border-(--primary-color) text-(--primary-color)" : ""} duration-500 transition-colors`}
+              href={"/"}
+              onClick={() => setSelected("contact")}
+            >
               Contact
             </Link>
           </div>
@@ -144,7 +161,10 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
                 h-8
                 bg-(--bg-soft)
                 rounded-full
-                px-12
+                md:px-12
+                md:pr-42
+                pr-26
+                px-4
                 ${OpenSans.className}
                 text-[12px]
                 md:text-[13.5px]

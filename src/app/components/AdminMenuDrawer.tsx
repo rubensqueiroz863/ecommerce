@@ -24,9 +24,9 @@ export default function MenuDrawer() {
       label: "Users",
       submenu: [
         { label: "Usuários", onClick: () => router.push("/admin/users") },
-        { label: "Criar/editar usuários", onClick: () => router.push("/admin/users/create") },
-        { label: "Gerenciar permissões" },
-        { label: "Logs de Atividades" },
+        { label: "Criar usuário", onClick: () => router.push("/admin/users/register") },
+        { label: "Gerenciar permissões", onClick: () => router.push("/admin/users/roles") },
+        { label: "Logs de Atividades", onClick: () => router.push("/admin/users/logs") },
       ],
     },
     {

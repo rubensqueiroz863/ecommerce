@@ -82,14 +82,14 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
   if (role === "user") {
     return (
       <motion.div
-        className="px-10 w-full mt-10"
+        className="px-10 w-full my-10"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         { /* Nome */}
         <motion.div
-          className={`flex items-center justify-between gap-18 ${OpenSans.className} text-(--text-dark)`}
+          className={`flex mb-8 items-center justify-between gap-18 ${OpenSans.className} text-(--text-dark)`}
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}

@@ -21,8 +21,8 @@ import { useCart } from "@/lib/cart";
 import { useAuth } from "@/hooks/useAuth";
 import CategoriesCard from "./components/CategoriesCard";
 import { OpenSans } from "@/lib/fonts";
-import CategoryCard from "./components/PhoneCategoryCard";
-import HeroCards from "./components/HeroCards";
+import CategoryCard from "./components/CategoryCard";
+import HeroCard from "./components/HeroCard";
 
 interface MostClickedProductDTO {
   product: ProductProps;
@@ -150,18 +150,86 @@ export default function HomePage() {
   return (
     <div className="w-full">
       <NavBar onSearch={search} />
-      <div className="flex w-full gap-8 px-4 pt-4 md:pt-8 md:px-8">
+      <div className="flex w-full gap-2 px-4 justify-between pt-4 md:pt-8 md:px-8">
         <div className="hidden md:block">
           <CategoriesCard />
         </div>
-        <div className="flex xl:flex-row flex-col gap-2 items-center flex-1 justify-center xl:px-34 md:px-12">
-          <CategoryCard name1="PHONES" name2="Shop" button="Shop by Category" img="/images/phones.png" show="" grandient="bg-linear-to-r from-[#010101] to-[#35695c]" />
-          <CategoryCard name1="Computers" name2="Shop" button="Shop by Category" img="/images/computers.png" show="hidden xl:flex" grandient="bg-linear-to-r from-[#010101] to-[#ff0101]" />
+        <div className="flex xl:flex-row flex-col gap-2 items-center justify-center xl:px-0 md:px-12">
+          <div className="flex flex-row gap-12">
+            <CategoryCard name1="Phone" name2="Shop" button="Shop by Category" img="/images/phones.png" show="" grandient="bg-linear-to-r from-[#010101] to-[#35695c]" />
+            <CategoryCard name1="Computers" name2="Shop" button="Shop by Category" img="/images/computers.png" show="hidden xl:flex" grandient="bg-linear-to-r from-[#010101] to-[#ff0101]" />
+            <div className="xl:flex flex-col gap-4 justify-between hidden">
+              <HeroCard
+                bg="#0ea5e9"
+                img="/images/asus.png"
+                size="bg-size-[110px] lg:bg-size-[130px] max-h-[140px] min-w-[172px]"
+                bgPlace="bg-bottom-right"
+                name1="Notebooks"
+                name2="Latest Models"
+                show="flex"
+              />
+              <HeroCard
+                bg="#22c55e"
+                img="/images/gym.png"
+                size="bg-size-[110px] lg:bg-size-[100px] max-h-[140px] min-w-[172px]"
+                bgPlace="bg-right"
+                name1="Fitness"
+                name2="Workout Gear"
+                show="flex"
+              />
+            </div>
+          </div>
         </div>
       </div>
       <div className="flex justify-center w-full px-4 pt-4 md:pt-6 md:px-8">
         <div className="w-full max-w-8xl">
-          <HeroCards />
+          <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-4 lg:gap-6 text-(--text-light)">
+            <HeroCard
+              bg="#01c8a1"
+              img="/images/apple.png"
+              size="bg-size-[110px] lg:bg-size-[130px] min-h-[130px] lg:min-h-[150px]"
+              bgPlace="bg-bottom-right"
+              name1="Apple"
+              name2="New Products"
+              show="flex"
+            />
+            <HeroCard
+              bg="#101010"
+              img="/images/quadcopter.png"
+              size="bg-size-[100px] lg:bg-size-[130px] min-h-[130px] lg:min-h-[150px]"
+              bgPlace="bg-right"
+              name1="Flying"
+              name2="Quadcopter"
+              show="flex"
+            />
+            <HeroCard
+              bg="#fc9614"
+              img="/images/clean.png"
+              size="bg-size-[90px] lg:bg-size-[120px] min-h-[130px] lg:min-h-[150px]"
+              bgPlace="bg-right"
+              name1="Clean"
+              name2="Your Home"
+              show="hidden md:flex"
+            />
+            <HeroCard
+              bg="#8c24e1"
+              img="/images/drink.png"
+              size="bg-size-[70px] lg:bg-size-[100px] min-h-[130px] lg:min-h-[150px]"
+              bgPlace="bg-right"
+              name1="Drink"
+              name2="Coffee"
+              show="hidden md:flex"
+            />
+            <HeroCard
+              bg="#ff0101"
+              img="/images/play.png"
+              size="bg-size-[70px] lg:bg-size-[120px] min-h-[130px] lg:min-h-[150px]"
+              bgPlace="bg-right"
+              name1="Play"
+              name2="Games"
+              show="hidden xl:flex"
+            />
+          </div>
         </div>
       </div>
       

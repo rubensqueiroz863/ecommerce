@@ -19,7 +19,7 @@ export default function HeroCard({
 }: HeroCardProps) {
   return (
     <div
-      className={`bg-no-repeat ${bgPlace} ${size} p-5 lg:p-6 rounded-3xl ${show} items-center`}
+      className={`bg-no-repeat ${bgPlace} ${size} p-5 lg:p-6 rounded-4xl ${show} items-center`}
       style={{
         backgroundColor: bg,
         backgroundImage: `url(${img})`

@@ -40,3 +40,7 @@
   --warning: #EAB308;
   --error: #DC2626;
 }
+
+html {
+  scroll-behavior: smooth;
+}

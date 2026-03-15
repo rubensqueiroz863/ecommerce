@@ -248,12 +248,12 @@ export default function HomePage() {
             transition={{ duration: 0.6 }}
           >
             <p className="text-xl font-bold">
-              Para você
+              For You
             </p>
 
             <span className="flex-1 h-px bg-(--text-secondary) opacity-50"></span>
 
-            <button className="bg-(--primary-color) text-(--text-light) rounded-full px-4 py-1 text-xs cursor-pointer">
+            <button className="bg-(--primary-color) text-(--text-light) rounded-full px-4 py-1 text-[16px] md:text-xs cursor-pointer">
               View All
             </button>
           </motion.div>
@@ -275,7 +275,7 @@ export default function HomePage() {
 
                 {/* Separador */}
                 {index !== forYou.length - 1 && (
-                  <span className="absolute bg-(--text-secondary) -right-3 top-1/2 h-20 w-px opacity-40 -translate-y-1/2" />
+                  <span className="absolute bg-(--text-secondary) -right-3 top-1/2 h-full w-px my-2 -translate-y-1/2" />
                 )}
               </div>
             ))}

@@ -87,7 +87,6 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        { /* Nome */}
         <motion.div
           className={`flex mb-8 items-center justify-between gap-18 ${OpenSans.className} text-(--text-dark)`}
           initial={{ opacity: 0, y: 50 }}
@@ -98,14 +97,12 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
             {name}
           </p>
 
-          {/* linha */}
           <span className="hidden md:flex md:flex-1 h-px bg-(--text-secondary) opacity-50"></span>
 
           <button className="bg-(--primary-color) text-[10px] px-2 text-(--text-light) rounded-full md:px-4 py-1 md:text-xs cursor-pointer">
             View All
           </button>
         </motion.div>
-        { /* Cards dos produtos */}
         <div className="flex gap-6 overflow-x-auto overflow-y-hidden">
           {products.map((product, index) => (
             <div key={product.id} className="relative flex items-center">
@@ -119,7 +116,6 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
                 role={role}
               />
 
-              {/* Barra separadora */}
               {index !== products.length - 1 && (
                 <span className="absolute bg-(--text-secondary) -right-3 top-1/2 h-full w-px my-2 -translate-y-1/2" />
               )}
@@ -131,7 +127,6 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
     );
   }
 
-  // 🔹 Admin
   return (
     <motion.div
       className="px-10 w-full mt-10"

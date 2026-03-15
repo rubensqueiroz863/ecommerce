@@ -91,39 +91,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
     // Navbar
     <header className="bg-(--bg-main)">
       
-      <div className="bg-(--bg-card) h-20 md:h-28 rounded-b-4xl">
-        <div className="flex px-8 justify-center items-center h-8 md:h-12 bg-(--bg-secondary) rounded-b-2xl">
-          <div className={`flex text-sm xl:text-[16px] ${OpenSans.className} flex-row gap-2 justify-between`}>
-            <Link 
-              className={`hover:opacity-70 rounded-full px-2 ${selected === "shop" ? "border border-(--primary-color) text-(--primary-color)" : ""} duration-500 transition-colors`}
-              href={"/"}
-              onClick={() => setSelected("shop")}
-            >
-              Shop
-            </Link>
-            <Link 
-              className={`hover:opacity-70 rounded-full px-2 ${selected === "home" ? "border border-(--primary-color) text-(--primary-color)" : ""} duration-500 transition-colors`}
-              href={"/"}
-              onClick={() => setSelected("home")}
-            >
-              Home
-            </Link>
-            <Link 
-              className={`hover:opacity-70 rounded-full px-2 ${selected === "about" ? "border border-(--primary-color) text-(--primary-color)" : ""} duration-500 transition-colors`}
-              href={"/"}
-              onClick={() => setSelected("about")}
-            >
-              About
-            </Link>
-            <Link 
-              className={`hover:opacity-70 rounded-full px-2 ${selected === "contact" ? "border border-(--primary-color) text-(--primary-color)" : ""} duration-500 transition-colors`}
-              href={"/"}
-              onClick={() => setSelected("contact")}
-            >
-              Contact
-            </Link>
-          </div>
-        </div>
+      <div className="bg-(--bg-card) h-13 md:h-16 rounded-b-4xl">
         <div className="
           flex
           items-center
@@ -144,6 +112,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
           <div className="flex gap-8 items-center justify-center">
             <Menu />
           </div>
+          <Logo />
           {/* Search */}
           <form
             onSubmit={handleSubmit}
@@ -154,7 +123,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
               onFocus={() => setIsOpen(true)}
               onBlur={() => setIsOpen(false)}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar..."
+              placeholder="Type here..."
               className={`
                 w-full
                 md:h-10
@@ -249,13 +218,10 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
               )}
             </AnimatePresence>
           </form>
-          <div className="flex flex-row items-center justify-center gap-4">
-            <button>
-              <p className={`text-[12px] md:text-[16px]`}>login / signup</p>
-            </button>
-            <Cart />
-          </div>
-          
+          <button>
+            <p className={`text-[12px] md:text-[16px]`}>login / signup</p>
+          </button>
+          <Cart />  
         </div>
       </div>
     </header>

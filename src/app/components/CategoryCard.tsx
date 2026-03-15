@@ -12,7 +12,7 @@ type CategoryCardProps = {
 
 export default function CategoryCard({ name1, name2, button, img, show, grandient }: CategoryCardProps) {
   return (
-    <div className={`flex ${show} ${grandient} ${OpenSans.className} max-w-[500px] flex-row xl:flex-row items-center py-4 md:py-12 pl-10 pr-2 xl:h-74 rounded-[46px] justify-between w-full`}>
+    <div className={`flex ${show} ${grandient} ${OpenSans.className} max-w-[500px] flex-row xl:flex-row items-center py-4 md:py-12 pl-10 pr-2 xl:h-74 rounded-4xl [46px] justify-between w-full`}>
       
       {/* Texto principal e botão */}
       <div className="flex flex-col gap-6 z-10">

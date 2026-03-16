@@ -4,3 +4,8 @@ export type MenuState = {
   openMenu: () => void;
   closeMenu: () => void;
 };
+
+export type MenuItem = {
+  label: string;
+  submenu?: { label: string; onClick?: () => void }[];
+};

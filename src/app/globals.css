@@ -1,9 +1,18 @@
 @import "tailwindcss";
 
+<<<<<<< docs/projectOrganization
 [data-theme="dark"] {
   --bg-main: #0F0F0F;
   --bg-secondary: #151515;
   --bg-card: #1C1C1C;
+=======
+:root {
+  --bg-main: #ffffff;
+  --bg-secondary: #1f1f21;
+  --bg-card: #292a37;
+  --bg-soft: #3c3d48;
+  --bg-gray: #e7f7f6;
+>>>>>>> local
 
   --text-main: #F5F5F5;
   --text-secondary: #B0B0B0;
@@ -17,6 +26,7 @@
   --error: #EF4444;
 }
 
+<<<<<<< docs/projectOrganization
 [data-theme="light"] {
   --bg-main: #F8FAFC;
   --bg-secondary: #F1F5F9;
@@ -32,4 +42,8 @@
   --success: #16A34A;
   --warning: #EAB308;
   --error: #DC2626;
+=======
+html {
+  scroll-behavior: smooth;
+>>>>>>> local
 }

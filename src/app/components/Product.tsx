@@ -1,5 +1,107 @@
 import Image from "next/image";
 import { ProductProps } from "../types/product";
+<<<<<<< docs/projectOrganization
+=======
+import { OpenSans } from "@/lib/fonts";
+
+type ClickRequest = {
+  productId: string;
+  userEmail: string;
+};
+
+export type Role = "ROLE_USER" | "ROLE_ADMIN";
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface SubCategory {
+  id: string;
+  name: string;
+  slug: string;
+  category: Category;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  photo: string;
+  subCategory: SubCategory;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  password: string;
+  name: string;
+  role: Role;
+}
+
+export interface ClickEventDTO {
+  id: string;
+  user: User;
+  product: Product;
+}
+
+async function registerClick(clickEvent: ClickRequest) {
+  try {
+    const response = await fetch(
+      "https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/click",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(clickEvent),
+      }
+    );
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        return;
+      }
+
+      throw new Error(`Server error: ${response.status}`);
+    }
+    return await response.json();
+  } catch (err) {
+    console.log("Erro de rede:", err);
+  }
+}
+
+export default function Product({
+  id,
+  name,
+  price,
+  photo,
+  width,
+  role
+}: Readonly<ProductProps>) {
+  const router = useRouter();
+
+  const userEmail =
+    globalThis.window === undefined
+      ? null
+      : localStorage.getItem("userEmail");
+
+  const handleClick = async () => {
+    try {
+      if (userEmail) {
+        await registerClick({
+          productId: id,
+          userEmail,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    router.push(`/product/${id}`);
+  };
+>>>>>>> local
 
 export default function Product({ id, name, price, photo, width  }: ProductProps) {
  
@@ -16,12 +118,14 @@ export default function Product({ id, name, price, photo, width  }: ProductProps
           className="h-56 w-auto object-contain"
         />
       </div>
+<<<<<<< docs/projectOrganization
       { /* Nome e preço */}
+=======
+>>>>>>> local
       <div className="flex flex-col gap-1 p-4">
         <p className="text-(--text-main) font-medium line-clamp-2">
           {name}
         </p>
-
         <p className="text-(--success) font-semibold text-lg">
           R$ {price}
         </p>

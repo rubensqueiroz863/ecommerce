@@ -5,13 +5,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
 import { useAdminMenu } from "@/lib/menu";
-
-type UserProps = {
-  id: string;
-  name: string;
-  email: string;
-  role: "ROLE_USER" | "ROLE_ADMIN";
-};
+import { UserProps } from "@/app/types/user";
 
 export default function UsersAdmin() {
   const [users, setUsers] = useState<UserProps[]>([]);
@@ -29,7 +23,7 @@ export default function UsersAdmin() {
         const data = await res.json();
         setUsers(data);
       } catch (err) {
-        console.error("Erro ao buscar usuários:", err);
+        console.error("Error in fetching users:", err);
       } finally {
         setLoading(false);
       }
@@ -57,7 +51,6 @@ export default function UsersAdmin() {
         )
       );
 
-      // depois que salva, atualiza o state users
       setUsers(prev =>
         prev.map(user =>
           changedRoles[user.id] ? { ...user, role: changedRoles[user.id] } : user
@@ -65,27 +58,16 @@ export default function UsersAdmin() {
       );
 
       setChangedRoles({});
-      alert("Roles atualizadas com sucesso!");
+      alert("Success in changin roles!");
     } catch (err) {
       console.error(err);
-      alert("Erro ao salvar roles");
+      alert("Error in changing roles.");
     } finally {
       setSaving(false);
     }
   };
 
-  const handleDelete = async (userId: string) => {
-    if (!confirm("Deseja deletar este usuário?")) return;
-
-    try {
-      await fetch(`https://sticky-charil-react-blog-3b39d9e9.koyeb.app/user/delete/${userId}`, { method: "DELETE" });
-      setUsers(prev => prev.filter(user => user.id !== userId));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  if (loading) return <p className="p-4">Carregando usuários...</p>;
+  if (loading) return <p className="p-4">Loading Users...</p>;
 
   const admins = users.filter(user => user.role === "ROLE_ADMIN");
   const normalUsers = users.filter(user => user.role === "ROLE_USER");
@@ -128,7 +110,7 @@ export default function UsersAdmin() {
           <thead className="bg-(--bg-secondary)">
             <tr>
               <th className="text-left p-3">ID</th>
-              <th className="text-left p-3">Nome</th>
+              <th className="text-left p-3">Name</th>
               <th className="text-left p-3">Email</th>
               <th className="text-left p-3">Role</th>
               <th></th>
@@ -140,12 +122,12 @@ export default function UsersAdmin() {
 
       {/* USERS */}
       <div>
-        <h2 className="text-xl font-semibold mb-4">Usuários</h2>
+        <h2 className="text-xl font-semibold mb-4">Users</h2>
         <table className="w-full bg-(--bg-card) rounded-xl shadow-md overflow-hidden">
           <thead className="bg-(--bg-secondary)">
             <tr>
               <th className="text-left p-3">ID</th>
-              <th className="text-left p-3">Nome</th>
+              <th className="text-left p-3">Name</th>
               <th className="text-left p-3">Email</th>
               <th className="text-left p-3">Role</th>
               <th></th>
@@ -154,8 +136,6 @@ export default function UsersAdmin() {
           <tbody>{renderRows(normalUsers)}</tbody>
         </table>
       </div>
-
-      {/* botão de salvar alterações */}
       {Object.keys(changedRoles).length > 0 && (
         <div className="flex justify-end mt-4">
           <button
@@ -163,11 +143,10 @@ export default function UsersAdmin() {
             disabled={saving}
             className="bg-black text-white px-6 py-2 rounded-lg hover:opacity-90 transition"
           >
-            {saving ? "Salvando..." : "Salvar alterações"}
+            {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
       )}
-
       <AnimatePresence>{menu.isOpen && <AdminMenuDrawer />}</AnimatePresence>
     </div>
   );

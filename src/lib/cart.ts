@@ -1,4 +1,4 @@
-import { CartState } from "@/app/types/cartState";
+import { CartState } from "@/app/types/cart";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 

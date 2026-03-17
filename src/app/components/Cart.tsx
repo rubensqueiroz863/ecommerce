@@ -1,17 +1,6 @@
-"use client";
-
 import { useCart } from "@/lib/cart";
-import { useTheme } from "next-themes";
-import Image from "next/image";
-import { useEffect, useState } from "react";
 
 export default function Cart() {
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const cart = useCart();
   return (
@@ -20,7 +9,7 @@ export default function Cart() {
       className="cursor-pointer"
     >
       <svg xmlns="http://www.w3.org/2000/svg"
-          className="w-4 h-4 md:h-4.5 transition-all hover:opacity-70 md:translate-y-0.5 md:w-4.5"
+          className="w-4 h-4 md:h-4.5 xl:w-5 xl:h-5 text-(--text-light) transition-all hover:opacity-70 md:translate-y-0.5 md:w-4.5"
           width="20"
           height="20"
           viewBox="0 0 24 24" 

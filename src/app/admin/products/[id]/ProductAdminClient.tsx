@@ -2,17 +2,13 @@
 
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
 import Footer from "@/app/components/Footer";
-import { ProductProps } from "@/app/types/product";
+import { ProductClientProps, ProductProps } from "@/app/types/product";
+import { formatUSD } from "@/lib/formatUSD";
 import { useAdminMenu } from "@/lib/menu";
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-type Props = {
-  id: string;
-};
-
-export default function ProductAdminClient({ id }: Readonly<Props>) {
+export default function ProductAdminClient({ id }: Readonly<ProductClientProps>) {
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState<ProductProps | null>(null);
   const [price, setPrice] = useState("");
@@ -21,22 +17,13 @@ export default function ProductAdminClient({ id }: Readonly<Props>) {
   const [originalProduct, setOriginalProduct] = useState<ProductProps | null>(null);
 
   const [successMessage, setSuccessMessage] = useState("");
-  const router = useRouter();
   const menu = useAdminMenu();
 
-  // 🔹 Função para formatar BRL
-  const formatBRL = (value: string) => {
-    const numbers = value.replace(/\D/g, "");
-    const number = Number(numbers) / 100;
-    return number.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatBRL(e.target.value);
+    const formatted = formatUSD(e.target.value);
     setPrice(formatted);
   };
 
-  // Fetch do produto
   useEffect(() => {
     async function fetchProduct() {
       if (!id) return;
@@ -46,9 +33,7 @@ export default function ProductAdminClient({ id }: Readonly<Props>) {
         const res = await fetch(`https://sticky-charil-react-blog-3b39d9e9.koyeb.app/produtos/${id}`);
         const data: ProductProps = await res.json();
 
-        setPrice(
-          data.price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
-        );
+        setPrice(formatUSD(data.price.toString()));
         setProduct(data);
         setOriginalProduct(data);
 
@@ -63,7 +48,6 @@ export default function ProductAdminClient({ id }: Readonly<Props>) {
     fetchProduct();
   }, [id]);
 
-  // Remove toast após 3s
   useEffect(() => {
     if (successMessage) {
       const timer = setTimeout(() => setSuccessMessage(""), 3000);
@@ -74,7 +58,7 @@ export default function ProductAdminClient({ id }: Readonly<Props>) {
   const handleCancel = () => {
     if (!originalProduct) return;
     setProduct(originalProduct);
-    setPrice(originalProduct.price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }));
+    setPrice(formatUSD(originalProduct.price.toString()));
   };
 
   const handleEdit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -112,7 +96,6 @@ export default function ProductAdminClient({ id }: Readonly<Props>) {
     }
   };
 
-  // 🔹 Loading skeleton
   if (loading) {
     return (
       <div className="min-h-screen bg-(--bg-main)">

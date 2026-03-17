@@ -1,12 +1,4 @@
-type HeroCardProps = {
-  bg: string;
-  img: string;
-  size: string;
-  bgPlace: string;
-  name1: string;
-  name2: string;
-  show: string;
-};
+import { HeroCardProps } from "../types/hero";
 
 export default function HeroCard({
   bg,
@@ -28,7 +20,6 @@ export default function HeroCard({
       <div>
         <p className="text-sm lg:text-lg text-white/80 leading-tight">{name1}</p>
         <p className="font-bold text-lg lg:text-xl leading-tight">{name2}</p>
-
         <button className="border mt-2 border-white rounded-full px-3 py-0.5 text-sm cursor-pointer hover:opacity-70 transition-all">
           Shop
         </button>

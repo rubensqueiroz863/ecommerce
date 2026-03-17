@@ -11,32 +11,16 @@ import {
   ResponsiveContainer,
   Brush
 } from "recharts";
-
-type RelatedProductDTO = {
-  productId: string;
-  productName: string;
-  usersInCommon: number;
-};
-
-type RecommendationDTO = {
-  baseProduct: string;
-  topRelatedProducts: RelatedProductDTO[];
-};
-
-type ChartData = {
-  baseProduct: string;
-  relatedProductName: string;
-  usersInCommon: number;
-};
+import { RecommendationChartData, RecommendationDTO } from "../types/charts";
 
 export default function RelatedProductsChart() {
-  const [data, setData] = useState<ChartData[]>([]);
+  const [data, setData] = useState<RecommendationChartData[]>([]);
 
   useEffect(() => {
     fetch("https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/recommendations")
       .then(res => res.json())
       .then((result: RecommendationDTO[]) => {
-        const chartData: ChartData[] = [];
+        const chartData: RecommendationChartData[] = [];
 
         result.forEach(item => {
           item.topRelatedProducts.forEach(related => {
@@ -75,22 +59,17 @@ export default function RelatedProductsChart() {
                     color: "#F9FAFB"
                   }}
                 >
-                  {/* Produto relacionado em destaque */}
                   <div style={{ fontWeight: 700, fontSize: 16, marginBottom: 6 }}>
                     {item.relatedProductName}
                   </div>
-
-                  {/* Base product */}
                   <div style={{ fontSize: 12, color: "#9CA3AF", marginBottom: 2 }}>
                     Base Product
                   </div>
                   <div style={{ fontWeight: 500, marginBottom: 6 }}>
                     {item.baseProduct}
                   </div>
-
-                  {/* Usuários em comum */}
                   <div style={{ fontSize: 12, color: "#9CA3AF", marginBottom: 2 }}>
-                    Usuários em comum
+                    Users in common
                   </div>
                   <div style={{ fontWeight: 600, fontSize: 14 }}>
                     {item.usersInCommon}

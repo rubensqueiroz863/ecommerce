@@ -4,68 +4,60 @@ import { useAdminMenu } from "@/lib/menu";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-// Tipo para cada item do menu
-type MenuItem = {
-  label: string;
-  submenu?: { label: string; onClick?: () => void }[];
-};
+import { MenuItem } from "../types/menu";
 
 export default function MenuDrawer() {
   const menu = useAdminMenu();
   const router = useRouter();
 
-  // Estado para controlar qual submenu está aberto
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-  // Menu principal com submenus
   const menuItems: MenuItem[] = [
     {
       label: "Users",
       submenu: [
-        { label: "Usuários", onClick: () => router.push("/admin/users") },
-        { label: "Criar usuário", onClick: () => router.push("/admin/users/register") },
-        { label: "Gerenciar permissões", onClick: () => router.push("/admin/users/roles") },
-        { label: "Logs de Atividades", onClick: () => router.push("/admin/users/logs") },
+        { label: "Users", onClick: () => router.push("/admin/users") },
+        { label: "Create User", onClick: () => router.push("/admin/users/register") },
+        { label: "Manage Roles", onClick: () => router.push("/admin/users/roles") },
+        { label: "Activity Logs", onClick: () => router.push("/admin/users/logs") },
       ],
     },
     {
       label: "Products",
       submenu: [
-        { label: "Gerenciar Produtos", onClick: () => router.push("/admin/products") },
-        { label: "Adicionar Produtos", onClick: () => router.push("/admin/products/register") },
-        { label: "Categorias" },
-        { label: "Estoque" },
+        { label: "Manage Products", onClick: () => router.push("/admin/products") },
+        { label: "Add Product", onClick: () => router.push("/admin/products/register") },
+        { label: "Categories" },
+        { label: "Inventory" },
       ],
     },
     {
-      label: "Pedidos / Vendas",
+      label: "Orders / Sales",
       submenu: [
-        { label: "Lista de Pedidos" },
-        { label: "Processamento" },
-        { label: "Relatórios de vendas" },
+        { label: "Order List" },
+        { label: "Processing" },
+        { label: "Sales Reports" },
       ],
     },
     {
-      label: "Configurações",
+      label: "Settings",
       submenu: [
-        { label: "Configurações do sistema" },
-        { label: "Configurações do pagamento" },
-        { label: "Integrações (API, webhook, etc.)" },
+        { label: "System Settings" },
+        { label: "Payment Settings" },
+        { label: "Integrations (API, webhook, etc.)" },
       ],
     },
     {
-      label: "Relatórios / Analytics",
+      label: "Reports / Analytics",
       submenu: [
         { label: "Dashboard", onClick: () => router.push("/admin/dashboard") },
-        { label: "Relátorios de performance" },
+        { label: "Performance Reports" },
       ],
     },
   ];
 
   return (
     <>
-      {/* Overlay */}
       <motion.div
         onClick={menu.closeMenu}
         className="fixed inset-0 bg-black/40 backdrop-blur-md z-40"
@@ -75,7 +67,6 @@ export default function MenuDrawer() {
         transition={{ duration: 0.2, ease: "easeOut" }}
       />
 
-      {/* Drawer */}
       <motion.div
         className="fixed overflow-auto pb-10 top-0 left-0 md:w-1/3 w-1/2 h-screen bg-(--bg-main) z-50 shadow-lg"
         initial={{ x: "-100%" }}
@@ -90,11 +81,9 @@ export default function MenuDrawer() {
           <div className="w-full h-px bg-(--soft-border)" />
         </div>
 
-        {/* Lista de Itens */}
         <div className="flex flex-col w-full">
           {menuItems.map((item, index) => (
             <div key={item.label}>
-              {/* Botão principal */}
               <button
                 onClick={() =>
                   setOpenIndex(openIndex === index ? null : index)
@@ -121,7 +110,6 @@ export default function MenuDrawer() {
                 )}
               </button>
 
-              {/* Submenu */}
               {item.submenu && (
                 <AnimatePresence>
                   {openIndex === index && (

@@ -1,6 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-import { ThemeProvider } from "next-themes";
 import NavBarAdmin from "../components/NavBarAdmin";
 
 const geistSans = Geist({
@@ -19,19 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body
         className={`bg-(--bg-main) ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="data-theme"
-          defaultTheme="system"
-          enableSystem
-        >
           <NavBarAdmin />
-          {children}
-        </ThemeProvider>
-        
+          {children}        
       </body>
     </html>
   );

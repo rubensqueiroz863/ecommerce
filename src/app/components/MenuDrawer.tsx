@@ -5,9 +5,7 @@ export default function MenuDrawer() {
   const menu = useMenu();
 
   return (
-    // MenuDrawer
     <>
-      {/* Overlay */}
       <motion.div
         onClick={menu.closeMenu}
         className="
@@ -21,8 +19,6 @@ export default function MenuDrawer() {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
       />
-
-      {/* Drawer */}
       <motion.div
         className="
           fixed top-0 left-0

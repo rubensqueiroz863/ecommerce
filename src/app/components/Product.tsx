@@ -62,14 +62,11 @@ async function registerClick(clickEvent: ClickRequest) {
 
     if (!response.ok) {
       if (response.status === 401) {
-        // usuário não autenticado → apenas ignora
         return;
       }
 
-      // outros erros
-      throw new Error(`Erro HTTP: ${response.status}`);
+      throw new Error(`Server error: ${response.status}`);
     }
-
     return await response.json();
   } catch (err) {
     console.log("Erro de rede:", err);
@@ -120,12 +117,10 @@ export default function Product({
           className="h-36 w-auto object-contain"
         />
       </div>
-
       <div className="flex flex-col gap-1 p-4">
         <p className={`text-(--text-dark) font-bold line-clamp-2 ${OpenSans.className}`}>
           {name}
         </p>
-
         <p className="text-(--success) font-semibold text-lg">
           R$ {price}
         </p>

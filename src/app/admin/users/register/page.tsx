@@ -31,7 +31,7 @@ export default function RegisterUsersAdmin() {
     const roleInput = form.userRole.value;
 
     if (!nameInput || !emailInput || !passwordInput || !roleInput) {
-      setError("Preencha todos os dados para continuar.");
+      setError("Fill all data to continue.");
       return;
     }
 
@@ -54,15 +54,15 @@ export default function RegisterUsersAdmin() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Dados inválidos.");
+        setError(data.message || "Error in Server.");
         return;
       }
 
       form.reset();
-      setSuccessMessage("Usuário registrado com sucesso!");
+      setSuccessMessage("Success in registering user!");
     } catch (err) {
       console.error(err);
-      setError("Erro ao registrar usuário");
+      setError("Error in registering user.");
     } finally {
       setLoading(false);
     }
@@ -83,27 +83,22 @@ export default function RegisterUsersAdmin() {
         )}
       </AnimatePresence>
       <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-8">
-
         <h1 className="text-2xl font-semibold text-neutral-800 mb-6 text-center">
-          Registrar Usuário
+          Register User
         </h1>
 
         <form
           onSubmit={handleUser}
           className="flex flex-col gap-4 text-neutral-700"
         >
-
-          {/* Nome */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm">Nome</label>
+            <label className="text-sm">Name</label>
             <input
               name="nome"
               type="text"
               className="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-neutral-800"
             />
           </div>
-
-          {/* Email */}
           <div className="flex flex-col gap-1">
             <label className="text-sm">Email</label>
             <input
@@ -112,18 +107,14 @@ export default function RegisterUsersAdmin() {
               className="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-neutral-800"
             />
           </div>
-
-          {/* Senha */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm">Senha</label>
+            <label className="text-sm">Password</label>
             <input
               name="password"
               type="password"
               className="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-neutral-800"
             />
           </div>
-
-          {/* Role */}
           <div className="flex flex-col gap-1">
             <label className="text-sm">Role</label>
             <select
@@ -134,21 +125,18 @@ export default function RegisterUsersAdmin() {
               <option value="ROLE_ADMIN">Admin</option>
             </select>
           </div>
-
           {error && (
             <p className="text-sm text-red-500 text-center">{error}</p>
           )}
-
           <button
             type="submit"
             disabled={loading}
             className="mt-2 cursor-pointer bg-neutral-900 text-white py-2 rounded-md hover:bg-neutral-800 transition disabled:opacity-60"
           >
-            {loading ? "Registrando..." : "Registrar Usuário"}
+            {loading ? "Registering..." : "Register User"}
           </button>
         </form>
       </div>
-
       <AnimatePresence>
         {menu.isOpen && <AdminMenuDrawer />}
       </AnimatePresence>

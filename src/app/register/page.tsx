@@ -1,17 +1,10 @@
-import RegisterForm from "./RegisterForm";
-
-type Props = {
-  searchParams: Promise<{
-    redirect?: string;
-  }>;
-};
+import { RedirectPromiseProps } from "../types/generics";
+import RegisterClient from "./RegisterClient";
 
 export default async function RegisterPage({
   searchParams,
-}: Readonly<Props>) {
+}: Readonly<RedirectPromiseProps>) {
   const params = await searchParams;
 
-  return (
-    <RegisterForm redirectTo={params.redirect} />
-  );
+  return <RegisterClient redirectTo={params.redirect} />;
 }

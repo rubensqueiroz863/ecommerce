@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Logo from "./Logo";
 import Menu from "./Menu";
 import { NavBarProps } from "../types/navbar";
-import Image from "next/image";
 import Cart from "./Cart";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
@@ -86,9 +85,8 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
     };
     onSearch(query);
   }
-
+  
   return (
-    // Navbar
     <header className="bg-(--bg-main)">
       
       <div className="bg-(--bg-card) h-13 md:h-16 rounded-b-4xl">
@@ -107,13 +105,10 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
           xl:px-16
           bg-(--bg-card)
         ">
-          
-          {/* Menu */}
           <div className="flex gap-8 items-center justify-center">
             <Menu />
           </div>
           <Logo />
-          {/* Search */}
           <form
             onSubmit={handleSubmit}
             className="relative mx-auto md:mx-0 flex-1 sm:max-w-sm md:max-w-md xl:max-w-xl"
@@ -142,7 +137,6 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
                 outline-none
               `}
             />
-            {/* Button */}
             <button
               type="submit"
               className="
@@ -157,13 +151,14 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
                 flex
                 items-center
                 justify-center
+                hover:opacity-70
+                transition-all
                 rounded-full
                 bg-(--primary-color)
                 cursor-pointer
               "
             >
               <p className={`text-sm ${OpenSans.className}`}>Search</p>
-              { /* Lupa de pesquisar */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-4 md:translate-y-0.5 h-4 md:h-[18px] md:w-[18px] text-(--bg-main)"

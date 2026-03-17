@@ -2,23 +2,14 @@
 
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
 import Footer from "@/app/components/Footer";
+import { ProductClientProps } from "@/app/types/product";
+import { UserProps } from "@/app/types/user";
 import { useAdminMenu } from "@/lib/menu";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-type UserProps = {
-  id: string;
-  name: string;
-  email: string;
-  role: "ROLE_USER" | "ROLE_ADMIN";
-};
-
-type Props = {
-  id: string;
-};
-
-export default function UserAdminClient({ id }: Readonly<Props>) {
+export default function UserAdminClient({ id }: Readonly<ProductClientProps>) {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<UserProps | null>(null);
   const [originalUser, setOriginalUser] = useState<UserProps | null>(null);
@@ -27,10 +18,8 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
   const [editLoading, setEditLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const router = useRouter();
   const menu = useAdminMenu();
 
-  // 🔹 Buscar usuário
   useEffect(() => {
     async function fetchUser() {
       if (!id) return;
@@ -45,7 +34,7 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
         setOriginalUser(data);
       } catch (err) {
         console.error(err);
-        setError("Erro ao carregar usuário.");
+        setError("Error in fetching user.");
       } finally {
         setLoading(false);
       }
@@ -54,7 +43,6 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
     fetchUser();
   }, [id]);
 
-  // 🔹 Toast
   useEffect(() => {
     if (successMessage) {
       const timer = setTimeout(() => setSuccessMessage(""), 3000);
@@ -90,15 +78,15 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Erro ao atualizar usuário.");
+        setError(data.message || "Error in paching user.");
         return;
       }
 
-      setSuccessMessage("Usuário atualizado com sucesso!");
+      setSuccessMessage("Success in paching user!");
       setOriginalUser(user);
     } catch (err) {
       console.error(err);
-      setError("Erro ao salvar alterações.");
+      setError("Error in saving data.");
     } finally {
       setEditLoading(false);
     }
@@ -107,14 +95,13 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
   if (loading) {
     return (
       <div className="min-h-screen bg-(--bg-main) flex items-center justify-center">
-        <p className="text-neutral-500">Carregando usuário...</p>
+        <p className="text-neutral-500">Loading user...</p>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg(--bg-main) relative">
-      {/* Toast */}
       <AnimatePresence>
         {successMessage && (
           <motion.div
@@ -127,17 +114,14 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
           </motion.div>
         )}
       </AnimatePresence>
-
       <div className="max-w-xl mx-auto px-4 py-16">
         <form
           onSubmit={handleEdit}
           className="bg-(--bg-card) p-8 rounded-2xl shadow-sm flex flex-col gap-6"
         >
           <h2 className="text-2xl font-semibold text-(--text-main)">
-            Editar Usuário
+            Edit User
           </h2>
-
-          {/* Nome */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-neutral-500">Nome</label>
             <input
@@ -151,8 +135,6 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
               className="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-neutral-800"
             />
           </div>
-
-          {/* Email */}
           <div className="flex flex-col gap-1">
             <label className="text-sm text-neutral-500">Email</label>
             <input
@@ -166,7 +148,6 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
               className="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-neutral-800"
             />
           </div>
-
           <div className="flex flex-col gap-1">
             <label className="text-sm">Role</label>
             <select
@@ -183,8 +164,6 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
               <option value="ROLE_ADMIN">Admin</option>
             </select>
           </div>
-
-
           {/* Botões */}
           <div className="flex gap-3 mt-4">
             <button
@@ -192,7 +171,7 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
               disabled={editLoading}
               className="bg-neutral-900 cursor-pointer text-white px-6 py-2 rounded-md hover:bg-neutral-800 transition disabled:opacity-50"
             >
-              {editLoading ? "Salvando..." : "Salvar alterações"}
+              {editLoading ? "Saving..." : "Save Changes"}
             </button>
 
             <button
@@ -200,16 +179,13 @@ export default function UserAdminClient({ id }: Readonly<Props>) {
               onClick={handleCancel}
               className="border px-6 py-2 cursor-pointer rounded-md hover:bg-neutral-200 transition"
             >
-              Cancelar
+              Cancel
             </button>
           </div>
-
           {error && <p className="text-red-500">{error}</p>}
         </form>
       </div>
-
       <AnimatePresence>{menu.isOpen && <AdminMenuDrawer />}</AnimatePresence>
-
       <div className="w-full h-px bg-[--soft-border] mt-30 md:mt-35" />
       <Footer />
     </div>

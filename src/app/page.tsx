@@ -228,7 +228,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      
       {forYou.length > 0 && (
         <motion.div
           className="px-10 w-full mt-10"
@@ -245,14 +244,11 @@ export default function HomePage() {
             <p className="text-xl font-bold">
               For You
             </p>
-
             <span className="flex-1 h-px bg-(--text-secondary) opacity-50"></span>
-
             <button className="bg-(--primary-color) text-(--text-light) rounded-full px-4 py-1 text-[16px] md:text-xs cursor-pointer">
               View All
             </button>
           </motion.div>
-
           <div className="flex gap-6 overflow-x-auto overflow-y-hidden mt-4">
             {forYou.map(({ product, clicks }, index) => (
               <div key={product.id} className="relative flex items-center">
@@ -266,7 +262,6 @@ export default function HomePage() {
                   photo={product.photo || ""}
                   role="user"
                 />
-
                 {index !== forYou.length - 1 && (
                   <span className="absolute bg-(--text-secondary) -right-3 top-1/2 h-full w-px my-2 -translate-y-1/2" />
                 )}
@@ -290,24 +285,19 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
             >
               <p className="text-xl font-bold">
-                Recomendações
+                Recommendations
               </p>
-
               <span className="flex-1 h-px bg-(--text-secondary) opacity-50"></span>
-
               <button className="bg-(--primary-color) text-(--text-light) rounded-full px-4 py-1 text-xs cursor-pointer">
                 View All
               </button>
             </motion.div>
-
             <div className="flex gap-6 overflow-x-auto overflow-y-hidden mt-4">
               {userRecommendations.recommendations.map((rec, index) => (
                 <div key={rec.productId} className="relative flex flex-col items-start gap-1">
-
                   <span className="text-xs text-(--text-secondary)">
-                    {rec.usersInCommon} usuários em comum
+                    {rec.usersInCommon} users in common
                   </span>
-
                   <Product
                     id={rec.productId}
                     name={rec.productName}
@@ -317,7 +307,6 @@ export default function HomePage() {
                     photo=""
                     role="user"
                   />
-
                   {index !== userRecommendations.recommendations.length - 1 && (
                     <span className="absolute bg-(--text-secondary) -right-3 top-1/2 h-20 w-px opacity-40 -translate-y-1/2" />
                   )}
@@ -326,7 +315,6 @@ export default function HomePage() {
             </div>
           </motion.div>
       )}
-      {/* Subcategorias */}
         <AnimatePresence>
           {subCategories.map(subCategory => (
             <SubCategory
@@ -343,14 +331,11 @@ export default function HomePage() {
           ref={ref}
           className="py-4 mb-125 text-center text-sm text-gray-400"
         >
-          {loading ? "Carregando..." : "Carregando mais..."}
+          {loading ? "Loading..." : "Loading more..."}
         </div>
       )}
-
-      {/* Drawers */}
       <AnimatePresence>{menu.isOpen && <MenuDrawer />}</AnimatePresence>
       <AnimatePresence>{cart.isOpen && <CartDrawer />}</AnimatePresence>
-
       <div className="w-full h-px bg-(--soft-border) mt-30 md:mt-35" />
       <Footer />
     </div>

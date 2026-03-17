@@ -10,15 +10,12 @@ import { PageResponse } from "@/app/types/pageResponse";
 import Footer from "@/app/components/Footer";
 import { AnimatePresence } from "framer-motion";
 import MenuDrawer from "@/app/components/MenuDrawer";
-import { useMenu } from "@/lib/menu";
 import CartDrawer from "@/app/components/CartDrawer";
+import { SearchProps } from "@/app/types/search";
+import { useMenu } from "@/lib/menu";
 import { useCart } from "@/lib/cart";
 
-type Props = {
-  query: string;
-};
-
-export default function SearchClient({ query }: Props) {
+export default function SearchClient({ query }: SearchProps) {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [results, setResults] = useState<ProductProps[]>([]);
@@ -34,10 +31,9 @@ export default function SearchClient({ query }: Props) {
   const menu = useMenu();
   const cart = useCart();
 
-  // 🔹 busca inicial (ou quando query muda)
   useEffect(() => {
     async function findProducts() {
-      if (!query) return;
+      if (!query) router.push("/");
 
       setLoading(true);
       setSearched(false);
@@ -50,7 +46,7 @@ export default function SearchClient({ query }: Props) {
 
       setResults(data.data);
       setHasMore(data.hasMore);
-      setPage(1); // próxima página
+      setPage(1);
       setSearched(true);
       setLoading(false);
     }
@@ -58,32 +54,26 @@ export default function SearchClient({ query }: Props) {
     findProducts();
   }, [query]);
 
-  // 🔹 carregar mais
   const loadMore = useCallback(async () => {
     if (loading || !hasMore) return;
 
     setLoading(true);
-    // Tenda dar fetch dos produtos
     try {
       const res = await fetch(
         `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/produtos/buscar?name=${query}&page=${page}&size=4`
       );
-      // Converte para json
       const data: PageResponse<ProductProps> = await res.json();
       
-      // Pega a data com os produtos e se tem mais
       setResults(prev => [...prev, ...data.data]);
       setHasMore(data.hasMore);
       setPage(prev => prev + 1);
     } catch (err) {
-      // Erro do fetch
       console.error(err);
     } finally {
       setLoading(false);
     }
   }, [query, page, hasMore, loading]);
 
-  // 🔹 quando o sentinela aparece
   useEffect(() => {
     if (inView) {
       loadMore();
@@ -94,16 +84,15 @@ export default function SearchClient({ query }: Props) {
     router.push(`/search/${query}`);
   }
 
+  if (!query) router.push("/");
+
   return (
-    // Pagina dos produtos pesquisados
     <div>
-      { /* Navbar */}
       <NavBar onSearch={search} />
       <div className="w-full h-px bg-(--hover-border)" />
-      { /* Detecta se está carregando */}
       {loading && !searched ? (
         <p className="px-4 my-4 mb-[400px] text-(--text-main) font-bold">
-          Buscando...
+          Searching...
         </p>
       ) : searched ? (
         <div className="flex my-4 px-4 flex-col">
@@ -111,11 +100,10 @@ export default function SearchClient({ query }: Props) {
             {query}
           </p>
           <p className="text-sm text-(--text-secondary)">
-            {results.length} resultados.
+            {results.length} results.
           </p>
         </div>
       ) : null}
-
       <ul
         className="
           grid
@@ -126,22 +114,19 @@ export default function SearchClient({ query }: Props) {
           px-4
         "
       >
-        { /* Produtos pesquisados */}
         {results.map(product => (
           <Product
             key={product.id}
             width=""
             query={query}
             id={product.id}
+            role="user"
             name={product.name}
             price={product.price}
             photo={product.photo}
-            role="user"
           />
         ))}
       </ul>
-
-      {/* 🔹 Sentinel */}
       {hasMore && (
         <div
           ref={ref}
@@ -149,16 +134,14 @@ export default function SearchClient({ query }: Props) {
         >
           {loading && (
             <p className="text-sm text-gray-400">
-              Carregando mais resultados...
+              Loading more products...
             </p>
           )}
         </div>
       )}
-      { /* Menu drawer */}
       <AnimatePresence>
         {menu.isOpen && <MenuDrawer />}
       </AnimatePresence>
-      { /* Cart drawer */}
       <AnimatePresence>
         {cart.isOpen && <CartDrawer />}
       </AnimatePresence>

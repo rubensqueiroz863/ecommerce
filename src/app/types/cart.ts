@@ -9,3 +9,7 @@ export type CartState = {
   toggleCart: () => void;
   clearCart: () => void;
 }
+
+export type CartButtonProps = {
+  product: ProductProps;
+};

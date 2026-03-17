@@ -18,14 +18,12 @@ export default function ProductCart({ id, name, price, photo, width, product  }:
       return;
     }
 
-    console.log("Comprar produto:", product);
+    console.log("Buy product:", product);
   };
 
   return (
-    // Card do produto
     <div
       className={`flex flex-col ${width} mb-4 bg-(--bg-card) rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden`}>
-      { /* Foto do produto */}
       <div className="flex items-center justify-center bg-white p-4">
         <Image
           src={"https://i.postimg.cc/pXsJJ92z/526867-200.png"}
@@ -35,7 +33,6 @@ export default function ProductCart({ id, name, price, photo, width, product  }:
           className="h-56 w-auto object-contain"
         />
       </div>
-      { /* Nome e preço */}
       <div className="flex flex-col gap-1 p-4">
         <p className="text-(--text-main) font-medium line-clamp-2">
           {name}
@@ -48,13 +45,13 @@ export default function ProductCart({ id, name, price, photo, width, product  }:
           className="py-1 px-2 bg-red-600 hover:opacity-90 transition-all cursor-pointer rounded-md mt-2 text-sm"
           onClick={() => cart.removeProduct(product)}
         >
-          Remover Produto
+          Remove Product
         </button>
         <button 
           onClick={handleBuy}
           className="py-1 px-2 bg-green-600 hover:opacity-90 transition-all cursor-pointer rounded-md mt-2 text-sm"
         >
-          Comprar Produto
+          Buy Product
         </button>
       </div>
     </div>

@@ -5,13 +5,7 @@ import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
 import { useAdminMenu } from "@/lib/menu";
-
-type UserProps = {
-  id: string;
-  name: string;
-  email: string;
-  role: "ROLE_USER" | "ROLE_ADMIN";
-};
+import { UserProps } from "@/app/types/user";
 
 export default function UsersAdmin() {
   const [users, setUsers] = useState<UserProps[]>([]);
@@ -27,7 +21,7 @@ export default function UsersAdmin() {
         const data = await res.json();
         setUsers(data);
       } catch (err) {
-        console.error("Erro ao buscar usuários:", err);
+        console.error("Error in feching users:", err);
       } finally {
         setLoading(false);
       }
@@ -37,14 +31,13 @@ export default function UsersAdmin() {
   }, []);
 
   const handleDelete = async (userId: string) => {
-    if (!confirm("Deseja deletar este usuário?")) return;
+    if (!confirm("Want to delete user?")) return;
 
     try {
       await fetch(`https://sticky-charil-react-blog-3b39d9e9.koyeb.app/user/delete/${userId}`, {
         method: "DELETE",
       });
 
-      // remove da lista em tempo real
       setUsers(prev => prev.filter(user => user.id !== userId));
     } catch (err) {
       console.error(err);
@@ -52,7 +45,7 @@ export default function UsersAdmin() {
   };
 
   if (loading) {
-    return <p className="p-4">Carregando usuários...</p>;
+    return <p className="p-4">Loading Users...</p>;
   }
 
   return (
@@ -61,7 +54,7 @@ export default function UsersAdmin() {
         <thead className="bg-(--bg-secondary)">
           <tr>
             <th className="text-left p-3">ID</th>
-            <th className="text-left p-3">Nome</th>
+            <th className="text-left p-3">Name</th>
             <th className="text-left p-3">Email</th>
             <th className="text-left p-3">Role</th>
             <th className="p-3"></th>
@@ -82,7 +75,7 @@ export default function UsersAdmin() {
               <td className="p-3 text-(--error) font-semibold">
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // impede o click de chegar no <tr>
+                    e.stopPropagation();
                     handleDelete(user.id);
                   }}
                   className="hover:text-red-600 rounded-full cursor-pointer hover:bg-[--text-muted] p-1 transition"
@@ -110,7 +103,6 @@ export default function UsersAdmin() {
         </tbody>
       </table>
       <AnimatePresence>{menu.isOpen && <AdminMenuDrawer />}</AnimatePresence>
-
     </div>
   );
 }

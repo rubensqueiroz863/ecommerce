@@ -17,7 +17,6 @@ export default function CloseCartButton() {
         md:hidden
       "
     >
-      {/* Linha 1 */}
       <span
         className="
           absolute
@@ -27,8 +26,6 @@ export default function CloseCartButton() {
           rotate-45
         "
       />
-
-      {/* Linha 2 */}
       <span
         className="
           absolute

@@ -18,6 +18,10 @@ export type ProductCartProps = {
   product: ProductProps;
 }
 
+export type ProductClientProps = {
+  id: string;
+};
+
 export type ProductPageProps = {
   params: Promise<{
     id: string

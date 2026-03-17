@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 export default function Footer() {
-
   return (
     <div className="flex items-center w-full gap-2 flex-col text-[12px] md:text-[18px] md:px-0 px-16 justify-center pt-16 pb-12">
       <div className="flex gap-1.5 items-center justify-center w-full text-(--text-main)/80 dark:text-(--text-main)/80">
@@ -32,7 +31,7 @@ export default function Footer() {
         <p className="w-20">SpringBoot</p>
       </div>
       <p className="text-sm text-center text-(--text-secondary)">
-        Direitos autorais © Rubens Q. ALves 2026. Todos os direitos reservados.
+        Copyright © Rubens Q. Alves 2026. All rights reserved.
       </p>
     </div>
   );

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SubCategoryProps } from "../types/subCategory";
 import { ProductProps } from "../types/product";
 import Product from "./Product";
 import { motion } from "framer-motion";
@@ -9,6 +8,7 @@ import Image from "next/image";
 import { PageResponse } from "../types/pageResponse";
 import { useRouter } from "next/navigation";
 import { OpenSans } from "@/lib/fonts";
+import { SubCategoryProps } from "../types/category";
 
 export default function SubCategory({ name, slug, role }: Readonly<SubCategoryProps>) {
   const [products, setProducts] = useState<ProductProps[]>([]);
@@ -44,7 +44,6 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
-      // Remove do state em tempo real
       setProducts(prev => prev.filter(p => p.id !== productId));
     } catch (err) {
       console.error(err);
@@ -52,7 +51,6 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
     }
   };
 
-  // 🔹 Loading
   if (loading) {
     return role === "user" ? (
       <div className="px-10 w-full mt-10 flex gap-4 overflow-x-auto">
@@ -67,13 +65,13 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
             />
           </div>
           <div className="flex flex-col gap-1 p-4">
-            <p className="text-[--text-main] font-medium">Carregando...</p>
+            <p className="text-[--text-main] font-medium">Loading...</p>
             <p className="text-[--success] font-semibold text-lg">R$ 00.00</p>
           </div>
         </div>
       </div>
     ) : (
-      <p className="text-[--text-main] font-medium">Carregando...</p>
+      <p className="text-[--text-main] font-medium">Loading...</p>
     );
   }
 
@@ -96,10 +94,8 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
           <p className="md:text-xl text-lg  font-bold text-(--text-dark)">
             {name}
           </p>
-
           <span className="hidden md:flex md:flex-1 h-px bg-(--text-secondary) opacity-50"></span>
-
-          <button className="bg-(--primary-color) text-[10px] px-2 text-(--text-light) rounded-full md:px-4 py-1 md:text-xs cursor-pointer">
+          <button className="hover:opacity-70 bg-(--primary-color) text-[10px] px-2 text-(--text-light) rounded-full md:px-4 py-1 md:text-xs cursor-pointer">
             View All
           </button>
         </motion.div>
@@ -115,14 +111,13 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
                 photo={product.photo}
                 role={role}
               />
-
               {index !== products.length - 1 && (
                 <span className="absolute bg-(--text-secondary) -right-3 top-1/2 h-full w-px my-2 -translate-y-1/2" />
               )}
             </div>
           ))}
         </div>
-        {hasMore && <p className="text-sm text-gray-400 mt-2">Mais produtos disponíveis…</p>}
+        {hasMore && <p className="text-sm text-gray-400 mt-2">Loading more products…</p>}
       </motion.div>
     );
   }
@@ -147,8 +142,8 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
           <thead className="bg-[--bg-secondary]">
             <tr>
               <th className="text-left p-3">ID</th>
-              <th className="text-left p-3">Produto</th>
-              <th className="text-left p-3">Preço</th>
+              <th className="text-left p-3">Product</th>
+              <th className="text-left p-3">Price</th>
               <th className="p-3"></th>
             </tr>
           </thead>
@@ -193,7 +188,7 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
           </tbody>
         </table>
       </div>
-      {hasMore && <p className="text-sm text-gray-400 mt-2">Mais produtos disponíveis…</p>}
+      {hasMore && <p className="text-sm text-gray-400 mt-2">Loading more products…</p>}
     </motion.div>
   );
 }

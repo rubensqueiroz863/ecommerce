@@ -1,6 +1,7 @@
 "use client";
 
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
+import { formatUSD } from "@/lib/formatUSD";
 import { useAdminMenu } from "@/lib/menu";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -13,17 +14,6 @@ export default function RegisterProductsAdmin() {
 
   const menu = useAdminMenu();
 
-  const formatBRL = (value: string) => {
-    const numbers = value.replaceAll(/\D/g, "");
-
-    const number = Number(numbers) / 100;
-
-    return number.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-  };
-
   useEffect(() => {
     if (successMessage) {
       const timer = setTimeout(() => setSuccessMessage(""), 3000);
@@ -32,7 +22,7 @@ export default function RegisterProductsAdmin() {
   }, [successMessage]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatBRL(e.target.value);
+    const formatted = formatUSD(e.target.value);
     setPrice(formatted);
   };
 
@@ -70,16 +60,16 @@ export default function RegisterProductsAdmin() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Dados inválidos.");
+        setError(data.message || "Error in server.");
         return;
       }
 
       form.reset();
-      setSuccessMessage("Usuário registrado com sucesso!");
+      setSuccessMessage("Success in registering product!");
       setPrice("");
     } catch (err) {
       console.error(err);
-      setError("Erro ao registrar");
+      setError("Error in registering product.");
     } finally {
       setLoading(false);
     }
@@ -100,27 +90,23 @@ export default function RegisterProductsAdmin() {
         )}
       </AnimatePresence>
       <div className="bg-white w-full max-w-md rounded-xl shadow-lg p-8">
-
         <h1 className="text-2xl font-semibold text-neutral-800 mb-6 text-center">
-          Registrar Produto
+          Register Product
         </h1>
-
         <form
           onSubmit={handleProduct}
           className="flex flex-col gap-4 text-neutral-700"
         >
-
           <div className="flex flex-col gap-1">
-            <label className="text-sm">Nome do produto</label>
+            <label className="text-sm">Product Name</label>
             <input
               name="nome"
               type="text"
               className="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-neutral-800"
             />
           </div>
-
           <div className="flex flex-col gap-1">
-            <label className="text-sm">Preço</label>
+            <label className="text-sm">Price</label>
             <input
               name="price"
               type="text"
@@ -130,18 +116,16 @@ export default function RegisterProductsAdmin() {
               className="border rounded-md px-3 py-2 w-full"
             />
           </div>
-
           <div className="flex flex-col gap-1">
-            <label className="text-sm">URL da imagem</label>
+            <label className="text-sm">Image URL</label>
             <input
               name="photo"
               type="text"
               className="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-neutral-800"
             />
           </div>
-
           <div className="flex flex-col gap-1">
-            <label className="text-sm">Categoria</label>
+            <label className="text-sm">Category</label>
             <select
               name="subcategory"
               className="border cursor-pointer rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-neutral-800"
@@ -166,17 +150,15 @@ export default function RegisterProductsAdmin() {
               </option>
             </select>
           </div>
-
           {error && (
             <p className="text-sm text-red-500 text-center">{error}</p>
           )}
-
           <button
             type="submit"
             disabled={loading}
             className="mt-2 cursor-pointer bg-neutral-900 text-white py-2 rounded-md hover:bg-neutral-800 transition disabled:opacity-60"
           >
-            {loading ? "Registrando..." : "Registrar Produto"}
+            {loading ? "Registering..." : "Register Product"}
           </button>
         </form>
       </div>

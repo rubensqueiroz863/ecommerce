@@ -1,4 +1,4 @@
-import { MenuState } from "@/app/types/menuState";
+import { MenuState } from "@/app/types/menu";
 import { create } from "zustand";
 
 // Menu da navbar

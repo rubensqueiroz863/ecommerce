@@ -1,15 +1,10 @@
-import LoginForm from "./LoginForm";
-
-type Props = {
-  searchParams: Promise<{
-    redirect?: string;
-  }>;
-};
+import { RedirectPromiseProps } from "../types/generics";
+import LoginClient from "./LoginClient";
 
 export default async function LoginPage({
   searchParams,
-}: Readonly<Props>) {
+}: Readonly<RedirectPromiseProps>) {
   const params = await searchParams;
 
-  return <LoginForm redirectTo={params.redirect} />;
+  return <LoginClient redirectTo={params.redirect} />;
 }

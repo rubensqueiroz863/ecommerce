@@ -5,7 +5,6 @@ import Logo from "./Logo";
 
 export default function NavBarAdmin() {
   return (
-    // Navbar
     <header className="bg-(--bg-main)">
       <div className="
         flex
@@ -19,9 +18,7 @@ export default function NavBarAdmin() {
         xl:px-16
         bg-(--bg-main)
       ">
-        {/* Logo */}
         <Logo />
-        {/* Menu */}
         <AdminMenu />
       </div>
     </header>

@@ -10,6 +10,7 @@ import {
   CartesianGrid,
   ResponsiveContainer
 } from "recharts";
+import { ClickChartData, ClickClicksPerMonthDTO } from "../types/charts";
 
 const monthNames = [
   "",
@@ -27,31 +28,21 @@ const monthNames = [
   "Dez"
 ];
 
-type ClicksPerMonthDTO = {
-  month: number;
-  total: number;
-};
-
-type ChartData = {
-  month: string;
-  clicks: number;
-};
-
 export default function ClicksChart() {
-  const [data, setData] = useState<ChartData[]>([]);
+  const [data, setData] = useState<ClickChartData[]>([]);
 
   useEffect(() => {
     fetch("https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/all-clicks/monthly")
       .then(res => res.json())
-      .then((result: ClicksPerMonthDTO[]) => {
+      .then((result: ClickClicksPerMonthDTO[]) => {
 
-        const fullYear: ChartData[] = Array.from({ length: 12 }, (_, i) => ({
+        const fullYear: ClickChartData[] = Array.from({ length: 12 }, (_, i) => ({
           month: monthNames[i + 1],
           clicks: 0
         }));
 
         result.forEach(item => {
-          const index = item.month - 1; // mês começa em 1
+          const index = item.month - 1;
           fullYear[index].clicks = item.total;
         });
 

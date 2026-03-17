@@ -4,7 +4,6 @@ import type { NextRequest } from "next/server";
 export function proxy(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
-  // Se não tem token → login
   if (!token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
@@ -17,12 +16,10 @@ export function proxy(request: NextRequest) {
     const role = payload.role;
     const pathname = request.nextUrl.pathname;
 
-    // Admin
     if (pathname.startsWith("/admin") && role !== "ROLE_ADMIN") {
       return NextResponse.redirect(new URL("/", request.url));
     }
 
-    // Profile (qualquer logado pode acessar, opcional ajustar)
     if (pathname.startsWith("/profile") && !role) {
       return NextResponse.redirect(new URL("/login", request.url));
     }

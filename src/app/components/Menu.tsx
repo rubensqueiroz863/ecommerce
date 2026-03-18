@@ -12,7 +12,7 @@ export default function Menu() {
       className="flex gap-1 flex-col cursor-pointer"
     >
       <motion.span
-        className="bg-(--text-main) w-6 h-[3px] rounded-md origin-center"
+        className="bg-(--text-main) w-5 h-[2px] md:w-6 md:h-[3px] rounded-md origin-center"
         animate={{
           rotate: menu.isOpen ? 45 : 0,
           y: menu.isOpen ? 8 : 0,
@@ -20,14 +20,14 @@ export default function Menu() {
         transition={{ duration: 0.2 }}
       />
       <motion.span
-        className="bg-(--text-main) w-6 h-[3px] rounded-md origin-center"
+        className="bg-(--text-main) w-5 h-[2px] md:w-6 md:h-[3px] rounded-md origin-center"
         animate={{
           opacity: menu.isOpen ? 0: 1,
         }}
         transition={{ duration: 0.15}}
       />
       <motion.span
-        className="bg-(--text-main) w-6 h-[3px] rounded-md origin-center"
+        className="bg-(--text-main) w-5 h-[2px] md:w-6 md:h-[3px] rounded-md origin-center"
         animate={{
           rotate: menu.isOpen ? -45 : 0,
           y: menu.isOpen ? -6 : 0,

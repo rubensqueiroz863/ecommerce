@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MenuItem } from "../types/menu";
 
-export default function MenuDrawer() {
+export default function AdminMenuDrawer() {
   const menu = useAdminMenu();
   const router = useRouter();
 

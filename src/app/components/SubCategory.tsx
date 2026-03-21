@@ -80,7 +80,7 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
   if (role === "user") {
     return (
       <motion.div
-        className="px-10 w-full my-10"
+        className="px-4 md:px-8 w-full my-10"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}

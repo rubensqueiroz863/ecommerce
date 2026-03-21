@@ -191,7 +191,7 @@ export default function HomePage() {
             <HeroCard
               bg="#101010"
               img="/images/quadcopter.png"
-              size="bg-size-[100px] lg:bg-size-[130px] min-h-[130px] lg:min-h-[150px]"
+              size="bg-size-[100px] lg:bg-size-[130px] min-h-[130px] lg:min-h-[180px]"
               bgPlace="bg-right"
               name1="Flying"
               name2="Quadcopter"
@@ -229,7 +229,7 @@ export default function HomePage() {
       </div>
       {forYou.length > 0 && (
         <motion.div
-          className="px-10 w-full mt-10"
+          className="px-4 md:px-8 w-full mt-10"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -268,7 +268,7 @@ export default function HomePage() {
       {userRecommendations &&
         userRecommendations?.recommendations?.length > 0 && (
           <motion.div
-            className="px-10 w-full mt-10"
+            className="px-4 md:px-8 w-full mt-10"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}

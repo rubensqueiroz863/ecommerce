@@ -30,7 +30,7 @@ export default function LoginClient({ redirectTo }: Readonly<RedirectProps>) {
 
     try {
       const res = await fetch(
-        "https://sticky-charil-react-blog-3b39d9e9.koyeb.app/auth/login",
+        process.env.NEXT_PUBLIC_BACKEND_API_URL + "auth/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

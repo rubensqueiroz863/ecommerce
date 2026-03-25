@@ -6,6 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
 import { useAdminMenu } from "@/lib/menu";
 import { UserProps } from "@/app/types/user";
+import { io } from "socket.io-client";
 
 export default function UsersAdmin() {
   const [users, setUsers] = useState<UserProps[]>([]);
@@ -19,7 +20,7 @@ export default function UsersAdmin() {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const res = await fetch("https://sticky-charil-react-blog-3b39d9e9.koyeb.app/user/all");
+        const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "users");
 
         let data;
         try {
@@ -39,6 +40,48 @@ export default function UsersAdmin() {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_API_URL);
+
+    const userId = "832b6d0d-0812-4682-8308-c7d655071595"; // ideal: vir do auth
+
+    socket.on("connect", () => {
+      console.log("Connected:", socket.id);
+      socket.emit("join", userId);
+    });
+
+    socket.on("order:update", (data) => {
+      console.log("Event Received:", data);
+
+      if (data.type === "USER_CREATED") {
+        setUsers((prev) => {
+          const exists = prev.some(u => u.id === data.user.id);
+          if (exists) return prev;
+
+          return [data.user, ...prev];
+        });
+      }
+
+      if (data.type === "USER_UPDATED") {
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === data.user.id ? data.user : u
+          )
+        );
+      }
+
+      if (data.type === "USER_DELETED") {
+        setUsers((prev) =>
+          prev.filter((u) => u.id !== data.userId)
+        );
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   const handleRoleChange = (userId: string, role: UserProps["role"]) => {
     setChangedRoles(prev => ({ ...prev, [userId]: role }));
   };
@@ -49,13 +92,24 @@ export default function UsersAdmin() {
       const updates = Object.entries(changedRoles);
 
       await Promise.all(
-        updates.map(([userId, role]) =>
-          fetch(`https://sticky-charil-react-blog-3b39d9e9.koyeb.app/user/edit/${userId}`, {
+        updates.map(([userId, role]) => {
+          const user = users.find(u => u.id === userId);
+          if (!user) return;
+
+          const dto = {
+            id: user.id,
+            email: user.email,
+            password: null,
+            role: role,
+            name: user.name
+          };
+
+          return fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}users/${userId}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ role }),
-          })
-        )
+            body: JSON.stringify(dto),
+          });
+        })
       );
 
       setUsers(prev =>

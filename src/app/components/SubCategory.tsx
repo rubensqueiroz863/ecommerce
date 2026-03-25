@@ -21,7 +21,7 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
       try {
         setLoading(true);
         const res = await fetch(
-          `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/produtos/subcategoria/${slug}?page=0&size=12`
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}products/subcategory/${slug}?page=0&size=12`
         );
         const data: PageResponse<ProductProps> = await res.json();
         setProducts(data.data);
@@ -40,7 +40,7 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
     if (!confirmed) return;
 
     try {
-      await fetch(`http://localhost:8080/produtos/delete/${productId}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}products/${productId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

@@ -28,7 +28,7 @@ export default function ProductClient({ id }: Readonly<ProductClientProps>) {
       setLoading(true);
 
       const res = await fetch(
-        `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/produtos/${id}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}products/${id}`
       )
 
       const data: ProductProps = await res.json();

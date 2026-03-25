@@ -26,7 +26,7 @@ export default function ProductsAdmin() {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/subcategories?page=${page}&size=6`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}subcategories?page=${page}&size=6`
       );
       const data: PageResponse<SubCategoryProps> = await res.json();
 

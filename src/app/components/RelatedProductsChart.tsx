@@ -17,7 +17,7 @@ export default function RelatedProductsChart() {
   const [data, setData] = useState<RecommendationChartData[]>([]);
 
   useEffect(() => {
-    fetch("https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/recommendations")
+    fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "events/recommendations/products")
       .then(res => res.json())
       .then((result: RecommendationDTO[]) => {
         const chartData: RecommendationChartData[] = [];

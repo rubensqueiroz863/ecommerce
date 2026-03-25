@@ -38,7 +38,7 @@ export default function RegisterUsersAdmin() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://sticky-charil-react-blog-3b39d9e9.koyeb.app/user/register", {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

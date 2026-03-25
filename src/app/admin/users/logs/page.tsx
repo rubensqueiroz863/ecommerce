@@ -14,7 +14,7 @@ export default function UserActivityLogs() {
   useEffect(() => {
     async function fetchLogs() {
       try {
-        const res = await fetch("https://sticky-charil-react-blog-3b39d9e9.koyeb.app/user/activity");
+        const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "logs/users");
         
         let data;
         try {

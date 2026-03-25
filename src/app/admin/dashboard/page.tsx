@@ -23,7 +23,7 @@ export default function DashboardPage() {
           <ProductsClicksChart />
         </div>
         <div className="w-full flex flex-col gap-4 font-bold text-(--text-dark) text-xl">
-          <h1 className="px-16">Relaioned Products</h1>
+          <h1 className="px-16">Related Products</h1>
           <RelatedProductsChart />
         </div>
       </div>

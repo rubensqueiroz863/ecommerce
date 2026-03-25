@@ -44,7 +44,7 @@ export default function RegisterProductsAdmin() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://sticky-charil-react-blog-3b39d9e9.koyeb.app/produtos/register", {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

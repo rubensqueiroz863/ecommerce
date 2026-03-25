@@ -32,7 +32,7 @@ export default function ClicksChart() {
   const [data, setData] = useState<ClickChartData[]>([]);
 
   useEffect(() => {
-    fetch("https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/all-clicks/monthly")
+    fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "events/analytics/clicks/monthly")
       .then(res => res.json())
       .then((result: ClickClicksPerMonthDTO[]) => {
 

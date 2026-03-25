@@ -31,7 +31,7 @@ export default function RegisterClient({ redirectTo }: Readonly<RedirectProps>) 
 
     try {
       const res = await fetch(
-        "https://sticky-charil-react-blog-3b39d9e9.koyeb.app/auth/register",
+        process.env.NEXT_PUBLIC_BACKEND_API_URL + "auth/register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

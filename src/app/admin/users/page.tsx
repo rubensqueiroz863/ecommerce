@@ -6,6 +6,7 @@ import { AnimatePresence } from "framer-motion";
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
 import { useAdminMenu } from "@/lib/menu";
 import { UserProps } from "@/app/types/user";
+import { io } from "socket.io-client";
 
 export default function UsersAdmin() {
   const [users, setUsers] = useState<UserProps[]>([]);
@@ -15,9 +16,51 @@ export default function UsersAdmin() {
   const menu = useAdminMenu();
 
   useEffect(() => {
+    const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_API_URL);
+
+    const userId = "832b6d0d-0812-4682-8308-c7d655071595";
+
+    socket.on("connect", () => {
+      console.log("Connected:", socket.id);
+      socket.emit("join", userId);
+    });
+
+    socket.on("order:update", (data) => {
+      console.log("Event received:", data);
+
+      if (data.type === "USER_CREATED") {
+        setUsers((prev) => {
+          const exists = prev.some(u => u.id === data.user.id);
+          if (exists) return prev;
+
+          return [data.user, ...prev];
+        });
+      }
+
+      if (data.type === "USER_UPDATED") {
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.id === data.user.id ? data.user : u
+          )
+        );
+      }
+
+      if (data.type === "USER_DELETED") {
+        setUsers((prev) =>
+          prev.filter((u) => u.id !== data.userId)
+        );
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
     async function fetchUsers() {
       try {
-        const res = await fetch("https://sticky-charil-react-blog-3b39d9e9.koyeb.app/user/all");
+        const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "users");
         const data = await res.json();
         setUsers(data);
       } catch (err) {
@@ -34,7 +77,7 @@ export default function UsersAdmin() {
     if (!confirm("Want to delete user?")) return;
 
     try {
-      await fetch(`https://sticky-charil-react-blog-3b39d9e9.koyeb.app/user/delete/${userId}`, {
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}users/${userId}`, {
         method: "DELETE",
       });
 

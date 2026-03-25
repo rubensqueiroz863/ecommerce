@@ -33,7 +33,7 @@ export interface UserRecommendationGroup {
 async function fetchRecommendations(userId: string) {
   try {
     const res = await fetch(
-      `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/user/recommendations/${userId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}events/users/${userId}/recommendations`,
       { headers: { Accept: "application/json" } }
     );
 
@@ -70,7 +70,7 @@ export default function SearchClient({ query }: SearchProps) {
       setSearched(false);
       try {
         const res = await fetch(
-          `https://sticky-charil-react-blog-3b39d9e9.koyeb.app/produtos/buscar?name=${query}&page=${pageNum}&size=4`
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}products?name=${query}&page=${pageNum}&size=4`
         );
         const data: PageResponse<ProductProps> = await res.json();
         if (pageNum === 0) setResults(data.data);
@@ -87,7 +87,6 @@ export default function SearchClient({ query }: SearchProps) {
     [query]
   );
 
-  // Carrega mais produtos no scroll
   const loadMore = useCallback(() => {
     if (!loading && hasMore) fetchProducts(page);
   }, [loading, hasMore, fetchProducts, page]);
@@ -104,11 +103,10 @@ export default function SearchClient({ query }: SearchProps) {
     if (inView) loadMore();
   }, [inView, loadMore]);
 
-  // Busca recomendações (exemplo: usuário logado disponível via menu ou cart)
   useEffect(() => {
     if (user?.id != null) {
       async function loadRecommendations() {
-        const userId = user!.id; // substituir pelo user real
+        const userId = user!.id;
         const data = await fetchRecommendations(userId);
         if (data) setRecommendations(data.recommendations);
       }

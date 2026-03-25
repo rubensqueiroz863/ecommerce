@@ -30,7 +30,7 @@ export default function ProductAdminClient({ id }: Readonly<ProductClientProps>)
       setLoading(true);
 
       try {
-        const res = await fetch(`https://sticky-charil-react-blog-3b39d9e9.koyeb.app/produtos/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}products/${id}`);
         const data: ProductProps = await res.json();
 
         setPrice(formatUSD(data.price.toString()));
@@ -72,7 +72,7 @@ export default function ProductAdminClient({ id }: Readonly<ProductClientProps>)
     setEditLoading(true);
 
     try {
-      const res = await fetch(`https://sticky-charil-react-blog-3b39d9e9.koyeb.app/produtos/edit/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}products/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: nameInput, price: priceInput }),

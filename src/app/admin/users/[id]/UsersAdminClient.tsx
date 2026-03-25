@@ -7,17 +7,19 @@ import { UserProps } from "@/app/types/user";
 import { useAdminMenu } from "@/lib/menu";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { io, Socket } from "socket.io-client";
 
 export default function UserAdminClient({ id }: Readonly<ProductClientProps>) {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<UserProps | null>(null);
   const [originalUser, setOriginalUser] = useState<UserProps | null>(null);
-
   const [error, setError] = useState("");
   const [editLoading, setEditLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
   const menu = useAdminMenu();
+
+  let socket: Socket;
 
   useEffect(() => {
     async function fetchUser() {
@@ -26,9 +28,8 @@ export default function UserAdminClient({ id }: Readonly<ProductClientProps>) {
       setLoading(true);
 
       try {
-        const res = await fetch(`https://sticky-charil-react-blog-3b39d9e9.koyeb.app/user/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}users/${id}`);
         const data: UserProps = await res.json();
-
         setUser(data);
         setOriginalUser(data);
       } catch (err) {
@@ -41,6 +42,35 @@ export default function UserAdminClient({ id }: Readonly<ProductClientProps>) {
 
     fetchUser();
   }, [id]);
+
+  useEffect(() => {
+    socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_API_URL!);
+    const userId = "832b6d0d-0812-4682-8308-c7d655071595";
+
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
+      socket.emit("join", userId);
+    });
+
+    socket.on("order:update", (data) => {
+      if (!data) return;
+
+      if (data.type === "USER_UPDATED" && data.user.id === id) {
+        setUser(data.user);
+        setOriginalUser(data.user);
+        setSuccessMessage("User updated in real time!");
+      }
+
+      if (data.type === "USER_DELETED" && data.userId === id) {
+        setUser(null);
+        setError("This user has been deleted!");
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (successMessage) {
@@ -62,7 +92,7 @@ export default function UserAdminClient({ id }: Readonly<ProductClientProps>) {
     setError("");
 
     try {
-      const res = await fetch(`https://sticky-charil-react-blog-3b39d9e9.koyeb.app/user/edit/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}users/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -74,12 +104,7 @@ export default function UserAdminClient({ id }: Readonly<ProductClientProps>) {
         }),
       });
 
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        data = null;
-      }
+      const data = await res.json().catch(() => null);
 
       if (!res.ok) {
         setError(data?.message || "Error in patching user.");
@@ -100,6 +125,14 @@ export default function UserAdminClient({ id }: Readonly<ProductClientProps>) {
     return (
       <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center">
         <p className="text-[var(--text-muted)]">Loading user...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center">
+        <p className="text-[var(--error)]">User not found or deleted.</p>
       </div>
     );
   }
@@ -195,7 +228,6 @@ export default function UserAdminClient({ id }: Readonly<ProductClientProps>) {
       <AnimatePresence>
         {menu.isOpen && <AdminMenuDrawer />}
       </AnimatePresence>
-      <div className="w-full h-px bg-[var(--hover-border)] mt-30 md:mt-35" />
       <Footer />
     </div>
   );

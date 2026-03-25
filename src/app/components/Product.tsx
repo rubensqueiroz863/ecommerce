@@ -8,7 +8,7 @@ import { Inter, OpenSans } from "@/lib/fonts";
 async function registerClick(clickEvent: { productId: string; userEmail: string }) {
   try {
     const response = await fetch(
-      "https://sticky-charil-react-blog-3b39d9e9.koyeb.app/events/click",
+      process.env.NEXT_PUBLIC_BACKEND_API_URL + "events/clicks",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

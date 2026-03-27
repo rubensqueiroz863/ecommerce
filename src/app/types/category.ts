@@ -1,5 +1,5 @@
 export type SubCategoryProps = {
-  id: number;
+  id: string;
   name: string;
   slug: string;
   role: string;

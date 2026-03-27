@@ -33,7 +33,7 @@ export default function ProductAdminClient({ id }: Readonly<ProductClientProps>)
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}products/${id}`);
         const data: ProductProps = await res.json();
 
-        setPrice(formatUSD(data.price.toString()));
+        setPrice(formatUSD((data.price*100).toString()));
         setProduct(data);
         setOriginalProduct(data);
       } catch (err) {
@@ -131,8 +131,6 @@ export default function ProductAdminClient({ id }: Readonly<ProductClientProps>)
 
       <div className="max-w-6xl mx-auto px-4 py-12">
         <form className="grid grid-cols-1 md:grid-cols-2 gap-10 bg-(--bg-card) p-8 rounded-2xl shadow-sm" onSubmit={handleEdit}>
-          
-          {/* Image */}
           <div className="flex flex-col items-center gap-4">
             <div className="w-full h-96 bg-(--bg-soft) rounded-xl flex items-center justify-center overflow-hidden">
               <img
@@ -144,11 +142,8 @@ export default function ProductAdminClient({ id }: Readonly<ProductClientProps>)
             <p className="text-sm text-(--text-muted)">Image Preview</p>
           </div>
 
-          {/* Form */}
           <div className="flex flex-col gap-6">
             <h2 className="text-2xl font-semibold text-(--text-main)">Edit Product</h2>
-
-            {/* Name */}
             <div className="flex flex-col gap-1">
               <label className="text-sm text-(--text-secondary)">Name</label>
               <input
@@ -162,7 +157,6 @@ export default function ProductAdminClient({ id }: Readonly<ProductClientProps>)
               />
             </div>
 
-            {/* Price */}
             <div className="flex flex-col gap-1">
               <label className="text-sm text-(--text-secondary)">Price</label>
               <input

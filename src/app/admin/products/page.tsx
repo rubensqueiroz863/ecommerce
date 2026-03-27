@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { io, Socket } from "socket.io-client";
 
 import { useAdminMenu } from "@/lib/menu";
 import { PageResponse } from "@/app/types/pageResponse";
@@ -17,24 +18,39 @@ export default function ProductsAdmin() {
   const [loading, setLoading] = useState(false);
 
   const menu = useAdminMenu();
-
   const { ref, inView } = useInView({ threshold: 0 });
+
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  useEffect(() => {
+    const s = io(process.env.NEXT_PUBLIC_WEBSOCKET_API_URL || "");
+
+    const userId = "832b6d0d-0812-4682-8308-c7d655071595";
+    s.on("connect", () => {
+      console.log("Connected WS:", s.id);
+      s.emit("join", userId);
+    });
+
+    setSocket(s);
+
+    return () => {
+      s.disconnect();
+    };
+  }, []);
 
   const fetchSubCategories = useCallback(async () => {
     if (loading || !hasMore) return;
-
     setLoading(true);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}subcategories?page=${page}&size=6`
       );
       const data: PageResponse<SubCategoryProps> = await res.json();
-
       setSubCategories(prev => [...prev, ...data.data]);
       setHasMore(data.hasMore);
       setPage(prev => prev + 1);
     } catch (err) {
-      console.error("Error in feaching data:", err);
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -48,7 +64,6 @@ export default function ProductsAdmin() {
     if (inView) fetchSubCategories();
   }, [inView, fetchSubCategories]);
 
-
   return (
     <div className="w-full">
       <AnimatePresence>
@@ -59,6 +74,7 @@ export default function ProductsAdmin() {
             name={subCategory.name}
             slug={subCategory.slug}
             role="admin"
+            socket={socket}
           />
         ))}
       </AnimatePresence>

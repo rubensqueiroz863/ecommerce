@@ -12,19 +12,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export default function RootLayout({
+export default function AdminLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body
-        className={`bg-(--bg-main) ${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-          <NavBarAdmin />
-          {children}        
-      </body>
-    </html>
+    <div className={`admin-layout bg-(--bg-main) ${geistSans.variable} ${geistMono.variable}`}>
+      <NavBarAdmin />
+      {children}
+    </div>
   );
 }

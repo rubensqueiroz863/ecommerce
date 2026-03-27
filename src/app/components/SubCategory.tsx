@@ -9,12 +9,68 @@ import { PageResponse } from "../types/pageResponse";
 import { useRouter } from "next/navigation";
 import { OpenSans } from "@/lib/fonts";
 import { SubCategoryProps } from "../types/category";
+import { io, Socket } from "socket.io-client";
 
-export default function SubCategory({ name, slug, role }: Readonly<SubCategoryProps>) {
+interface SubCategoryPropsWithSocket extends SubCategoryProps {
+  socket: Socket | null;
+}
+
+export default function SubCategory({ id, name, slug, role, socket }: SubCategoryPropsWithSocket) {  
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleEvent = (data: any) => {
+      switch (data.type) {
+        case "PRODUCT_CREATED":
+          if (!data.product || data.product.subCategory !== id) return;
+          setProducts(prev => {
+            if (prev.some(p => p.id === data.product.id)) return prev;
+            return [...prev, data.product];
+          });
+          break;
+
+        case "PRODUCT_UPDATED":
+          if (!data.product) return;
+          setProducts(prev => {
+            const exists = prev.some(p => p.id === data.product.id);
+
+            if (exists && data.product.subCategory !== name) {
+              return prev.filter(p => p.id !== data.product.id);
+            }
+
+            if (exists && data.product.subCategory === name) {
+              return prev.map(p => (p.id === data.product.id ? { ...p, ...data.product } : p));
+            }
+
+            if (!exists && data.product.subCategory === name) {
+              return [...prev, data.product];
+            }
+
+            return prev;
+          });
+          break;
+
+        case "PRODUCT_DELETED":
+          if (!data.productId) return;
+          setProducts(prev => prev.filter(p => p.id !== data.productId));
+          break;
+
+        default:
+          break;
+      }
+    };
+
+    socket.on("order:update", handleEvent);
+
+    return () => {
+      socket.off("order:update", handleEvent);
+    };
+  }, [socket, id, name]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +88,7 @@ export default function SubCategory({ name, slug, role }: Readonly<SubCategoryPr
         setLoading(false);
       }
     };
+
     fetchData();
   }, [slug]);
 

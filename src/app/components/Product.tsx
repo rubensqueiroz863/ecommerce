@@ -37,11 +37,13 @@ export default function Product({
   const router = useRouter();
   const userEmail = typeof window !== "undefined" ? localStorage.getItem("userEmail") : null;
 
-  const handleClick = async () => {
+  const handleClick = () => {
     if (userEmail) {
-      await registerClick({ productId: id, userEmail });
+      registerClick({ productId: id, userEmail }).catch(console.log);
     }
-    router.push(`/product/${id}`);
+    setTimeout(() => {
+      router.push(`/product/${id}`);
+    }, 50); // 50ms é suficiente
   };
 
   // Separar parte inteira e decimal
@@ -52,7 +54,6 @@ export default function Product({
       onClick={handleClick}
       className={`cursor-pointer flex flex-col h-[400px] w-[240px] ${width} mb-4 bg-white rounded-lg shadow-md hover:shadow-lg overflow-hidden transition-shadow duration-100`}
     >
-      {/* Imagem com área fixa */}
       <div className="bg-white w-full h-full p-0 flex items-center justify-center">
         <Image
           src={photo || "https://i.postimg.cc/pXsJJ92z/526867-200.png"}
@@ -62,14 +63,10 @@ export default function Product({
           className="min-w-full max-h-auto object-contain"
         />
       </div>
-
       <div className="flex flex-col gap-1 p-2 h-[140px]">
-        {/* Nome do produto */}
         <p className={`text-[var(--text-dark)] font-bold line-clamp-2 ${OpenSans.className}`}>
           {name}
         </p>
-
-        {/* Preço estilo Mercado Livre */}
         <div className={`flex items-start font-inter ${Inter.className} gap-0.5 justify-center text-[var(--text-dark)]`}>
           <span className="text-[20px]">R$ {integer}</span>
           <span className="text-xs mt-1 font-light"> {decimal}</span>

@@ -18,7 +18,7 @@ export default function CartButton({ product }: Readonly<CartButtonProps>) {
   return (
     <button
       onClick={handleAdd}
-      className="cursor-pointer w-full px-8 py-3 text-(--text-main) bg-(--bg-card) rounded-xl not-last:over:opacity-90 transition"
+      className="w-full px-8 py-3 text-(--text-main) bg-(--bg-card) rounded-xl hover:opacity-70 cursor-pointer hover:-translate-y-1.5 transition"
     >
       Add to Cart
     </button>

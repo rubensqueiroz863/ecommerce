@@ -5,7 +5,7 @@ import Logo from "./Logo";
 
 export default function NavBarAdmin() {
   return (
-    <header className="bg-(--bg-main)">
+    <header className="bg-[var(--bg-main)]">
       <div className="
         flex
         items-center
@@ -13,12 +13,18 @@ export default function NavBarAdmin() {
         justify-center
         gap-4
         md:gap-0
-        h-20
-        px-18
+        rounded-b-4xl
+        h-12
+        md:h-16
+        md:px-8
+        px-6
         xl:px-16
-        bg-(--bg-main)
+        bg-(--bg-card)
       ">
+        {/* Logo */}
         <Logo />
+
+        {/* Menu / Botão de abrir menu */}
         <AdminMenu />
       </div>
     </header>

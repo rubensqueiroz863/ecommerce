@@ -184,7 +184,7 @@ export default function SubCategory({ id, name, slug, role, socket }: SubCategor
       transition={{ duration: 0.6 }}
     >
       <motion.h2
-        className="text-xl font-bold mb-4"
+        className="text-xl text-(--text-dark) font-bold mb-4"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}

@@ -70,7 +70,7 @@ export default function SearchClient({ query }: SearchProps) {
       setSearched(false);
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}products?name=${query}&page=${pageNum}&size=4`
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}products?name=${query}&page=${pageNum}&size=12`
         );
         const data: PageResponse<ProductProps> = await res.json();
         if (pageNum === 0) setResults(data.data);
@@ -132,7 +132,7 @@ export default function SearchClient({ query }: SearchProps) {
         </div>
       )}
       {loading && !searched && (
-        <ul className="grid mt-20 grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 px-4 md:px-8">
+        <ul className="grid mt-20 grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6 px-4 md:px-8">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="flex flex-col gap-2 animate-pulse">
               <div className="bg-[var(--bg-card)] w-full h-40 rounded-md"></div>
@@ -143,7 +143,7 @@ export default function SearchClient({ query }: SearchProps) {
         </ul>
       )}
       {!loading && results.length > 0 && (
-        <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 px-4">
+        <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 gap-6 px-4">
           {results.map((product, index) => (
             <div key={product.id} className="relative flex flex-col items-center">
               <Product
@@ -182,7 +182,7 @@ export default function SearchClient({ query }: SearchProps) {
       {recommendations.length > 0 && (
         <div className="px-4 my-8">
           <p className="text-lg font-semibold text-[var(--text-dark)] mb-4">Produtos recomendados para você</p>
-          <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+          <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6">
             {recommendations.map((rec) => (
               <Product
                 key={rec.productId}

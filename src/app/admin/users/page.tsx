@@ -96,61 +96,66 @@ export default function UsersAdmin() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] w-full max-w-5xl mx-auto overflow-x-auto p-10">
-      <table className="w-full bg-[var(--bg-card)] rounded-xl shadow-md overflow-hidden border border-[var(--soft-border)]">
-        <thead className="bg-[var(--bg-secondary)]">
-          <tr>
-            <th className="text-left p-3 text-[var(--text-secondary)]">ID</th>
-            <th className="text-left p-3 text-[var(--text-secondary)]">Name</th>
-            <th className="text-left p-3 text-[var(--text-secondary)]">Email</th>
-            <th className="text-left p-3 text-[var(--text-secondary)]">Role</th>
-            <th className="p-3"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map(user => (
-            <tr
-              key={user.id}
-              className="border-t border-[var(--soft-border)] cursor-pointer transition-all duration-200 hover:bg-[var(--bg-soft)]"
-              onClick={() => router.push(`/admin/users/${user.id}`)}
-            >
-              <td className="p-3 text-[var(--text-muted)]">{user.id}</td>
-              <td className="p-3 font-medium text-[var(--text-main)]">{user.name}</td>
-              <td className="p-3 text-[var(--text-secondary)]">{user.email}</td>
-              <td className="p-3 text-[var(--text-secondary)]">{user.role}</td>
-              <td className="p-3 text-[var(--error)] font-semibold">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(user.id);
-                  }}
-                  className="hover:bg-[var(--bg-soft)] p-2 rounded-full transition cursor-pointer"
+    <div className="w-full">
+      <div className="min-h-screen bg-[var(--bg-main)] w-full p-10 flex flex-col items-center">
+        <div className="w-full max-w-6xl overflow-x-auto rounded-xl">
+          <table className="min-w-[700px] w-full bg-[var(--bg-card)] shadow-md border border-[var(--soft-border)]">
+            <thead className="bg-[var(--bg-secondary)]">
+              <tr>
+                <th className="text-left p-3 text-[var(--text-secondary)]">ID</th>
+                <th className="text-left p-3 text-[var(--text-secondary)]">Name</th>
+                <th className="text-left p-3 text-[var(--text-secondary)]">Email</th>
+                <th className="text-left p-3 text-[var(--text-secondary)]">Role</th>
+                <th className="p-3"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map(user => (
+                <tr
+                  key={user.id}
+                  className="border-t border-[var(--soft-border)] cursor-pointer transition-all duration-200 hover:bg-[var(--bg-soft)]"
+                  onClick={() => router.push(`/admin/users/${user.id}`)}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                  </svg>
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <AnimatePresence>
-        {menu.isOpen && <AdminMenuDrawer />}
-      </AnimatePresence>
+                  <td className="p-3 text-[var(--text-muted)]">{user.id}</td>
+                  <td className="p-3 font-medium text-[var(--text-main)]">{user.name}</td>
+                  <td className="p-3 text-[var(--text-secondary)]">{user.email}</td>
+                  <td className="p-3 text-[var(--text-secondary)]">{user.role}</td>
+                  <td className="p-3 text-[var(--error)] font-semibold">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(user.id);
+                      }}
+                      className="hover:bg-[var(--bg-soft)] p-2 rounded-full transition cursor-pointer"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <AnimatePresence>
+          {menu.isOpen && <AdminMenuDrawer />}
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

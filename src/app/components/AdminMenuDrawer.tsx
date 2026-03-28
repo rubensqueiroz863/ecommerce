@@ -16,7 +16,7 @@ export default function AdminMenuDrawer() {
     {
       label: "Users",
       submenu: [
-        { label: "Users", onClick: () => router.push("/admin/users") },
+        { label: "Manage Users", onClick: () => router.push("/admin/users") },
         { label: "Create User", onClick: () => router.push("/admin/users/register") },
         { label: "Manage Roles", onClick: () => router.push("/admin/users/roles") },
         { label: "Activity Logs", onClick: () => router.push("/admin/users/logs") },

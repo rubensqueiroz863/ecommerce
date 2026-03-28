@@ -62,7 +62,7 @@ export default function LoginClient({ redirectTo }: Readonly<RedirectProps>) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--bg-main)] px-4">
+<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1f1f21] via-[#292a37] to-[#2dc5bb] px-4">
       <form
         onSubmit={handleLogin}
         className="w-full max-w-md bg-[var(--bg-card)] p-8 rounded-2xl shadow-lg flex flex-col gap-6 border border-[var(--soft-border)]"

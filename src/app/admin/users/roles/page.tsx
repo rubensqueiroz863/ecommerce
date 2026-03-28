@@ -169,13 +169,11 @@ export default function UsersAdmin() {
     ));
 
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] px-6 py-12 flex flex-col gap-10 max-w-5xl mx-auto">
-      <div>
-        <h2 className="text-xl font-semibold mb-4 text-[var(--text-main)]">
-          Admins
-        </h2>
-        <table className="w-full bg-[var(--bg-card)] rounded-xl shadow-md overflow-hidden border border-[var(--soft-border)]">
-          <thead className="bg-[var(--bg-secondary)]">
+    <div className="min-h-screen bg-[var(--bg-main)] px-6 py-12 flex flex-col gap-10 max-w-6xl mx-auto">
+      <h2 className="text-xl font-semibold mt-4 text-[var(--text-dark)]">Admins</h2>
+      <div className="overflow-x-auto rounded-lg shadow">
+        <table className="min-w-[700px] w-full bg-[var(--bg-card)] rounded-xl border border-[var(--soft-border)]">
+          <thead className="bg-[var(--bg-secondary)] sticky top-0">
             <tr>
               <th className="text-left p-3 text-[var(--text-secondary)]">ID</th>
               <th className="text-left p-3 text-[var(--text-secondary)]">Name</th>
@@ -186,12 +184,11 @@ export default function UsersAdmin() {
           <tbody>{renderRows(admins)}</tbody>
         </table>
       </div>
-      <div>
-        <h2 className="text-xl font-semibold mb-4 text-[var(--text-main)]">
-          Users
-        </h2>
-        <table className="w-full bg-[var(--bg-card)] rounded-xl shadow-md overflow-hidden border border-[var(--soft-border)]">
-          <thead className="bg-[var(--bg-secondary)]">
+      <h2 className="text-xl font-semibold mt-4 text-[var(--text-dark)]">Users</h2>
+      <div className="overflow-x-auto rounded-lg shadow">
+        
+        <table className="min-w-[700px] w-full bg-[var(--bg-card)] rounded-xl border border-[var(--soft-border)]">
+          <thead className="bg-[var(--bg-secondary)] sticky top-0">
             <tr>
               <th className="text-left p-3 text-[var(--text-secondary)]">ID</th>
               <th className="text-left p-3 text-[var(--text-secondary)]">Name</th>
@@ -202,6 +199,8 @@ export default function UsersAdmin() {
           <tbody>{renderRows(normalUsers)}</tbody>
         </table>
       </div>
+
+      {/** Save Button **/}
       {Object.keys(changedRoles).length > 0 && (
         <div className="flex justify-end mt-4">
           <button
@@ -213,6 +212,7 @@ export default function UsersAdmin() {
           </button>
         </div>
       )}
+
       <AnimatePresence>
         {menu.isOpen && <AdminMenuDrawer />}
       </AnimatePresence>

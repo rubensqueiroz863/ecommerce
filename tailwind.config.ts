@@ -1,4 +1,14 @@
 // tailwind.config.ts
-module.exports = {
-  darkMode: ["attribute", 'data-theme="dark"'],
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./app/**/*.{ts,tsx,js,jsx}",
+    "./components/**/*.{ts,tsx,js,jsx}",
+  ],
+  experimental: {
+    suggestCanonicalClasses: false,
+  },
 };
+
+export default config;

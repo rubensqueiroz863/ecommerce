@@ -13,7 +13,13 @@ import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
 
 export default function ProductsAdmin() {
   const [subCategories, setSubCategories] = useState<SubCategoryProps[]>([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedPage = localStorage.getItem("productsAdminPage");
+      return savedPage ? parseInt(savedPage, 10) : 0;
+    }
+    return 0;
+  });
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 

@@ -7,14 +7,29 @@ import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
 import { useAdminMenu } from "@/lib/menu";
 import { UserProps } from "@/app/types/user";
 import { io } from "socket.io-client";
+import PaginationControls from "@/app/components/PaginationControls";
+
+interface PageResponse<T> {
+  data: T[];
+  hasMore: boolean;
+}
 
 export default function UsersAdmin() {
   const [users, setUsers] = useState<UserProps[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedPage = localStorage.getItem("usersAdminPage");
+      return savedPage ? parseInt(savedPage, 10) : 0;
+    }
+    return 0;
+  });
+  const [hasMore, setHasMore] = useState(false);
 
   const router = useRouter();
   const menu = useAdminMenu();
 
+  // WebSocket updates
   useEffect(() => {
     const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_API_URL);
 
@@ -26,29 +41,22 @@ export default function UsersAdmin() {
     });
 
     socket.on("order:update", (data) => {
-      console.log("Event received:", data);
-
       if (data.type === "USER_CREATED") {
         setUsers((prev) => {
           const exists = prev.some(u => u.id === data.user.id);
           if (exists) return prev;
-
           return [data.user, ...prev];
         });
       }
 
       if (data.type === "USER_UPDATED") {
         setUsers((prev) =>
-          prev.map((u) =>
-            u.id === data.user.id ? data.user : u
-          )
+          prev.map((u) => (u.id === data.user.id ? data.user : u))
         );
       }
 
       if (data.type === "USER_DELETED") {
-        setUsers((prev) =>
-          prev.filter((u) => u.id !== data.userId)
-        );
+        setUsers((prev) => prev.filter((u) => u.id !== data.userId));
       }
     });
 
@@ -57,21 +65,29 @@ export default function UsersAdmin() {
     };
   }, []);
 
+  // Fetch users with pagination
   useEffect(() => {
+    localStorage.setItem("usersAdminPage", page.toString());
+
     async function fetchUsers() {
+      setLoading(true);
       try {
-        const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "users");
-        const data = await res.json();
-        setUsers(data);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}users?page=${page}&size=10`
+        );
+        const data: PageResponse<UserProps> = await res.json();
+        setUsers(data.data);
+        setHasMore(data.hasMore);
       } catch (err) {
-        console.error("Error in fetching users:", err);
+        console.error("Error fetching users:", err);
+        setUsers([]);
       } finally {
         setLoading(false);
       }
     }
 
     fetchUsers();
-  }, []);
+  }, [page]);
 
   const handleDelete = async (userId: string) => {
     if (!confirm("Want to delete user?")) return;
@@ -80,11 +96,18 @@ export default function UsersAdmin() {
       await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}users/${userId}`, {
         method: "DELETE",
       });
-
       setUsers(prev => prev.filter(user => user.id !== userId));
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 0) setPage(page - 1);
+  };
+
+  const handleNextPage = () => {
+    if (hasMore) setPage(page + 1);
   };
 
   if (loading) {
@@ -98,7 +121,7 @@ export default function UsersAdmin() {
   return (
     <div className="w-full">
       <div className="min-h-screen bg-[var(--bg-main)] w-full p-10 flex flex-col items-center">
-        <div className="w-full max-w-6xl overflow-x-auto rounded-xl">
+        <div className="w-full max-w-6xl overflow-x-auto rounded-t-xl">
           <table className="min-w-[700px] w-full bg-[var(--bg-card)] shadow-md border border-[var(--soft-border)]">
             <thead className="bg-[var(--bg-secondary)]">
               <tr>
@@ -110,7 +133,7 @@ export default function UsersAdmin() {
               </tr>
             </thead>
             <tbody>
-              {users.map(user => (
+              {users?.map(user => (
                 <tr
                   key={user.id}
                   className="border-t border-[var(--soft-border)] cursor-pointer transition-all duration-200 hover:bg-[var(--bg-soft)]"
@@ -151,7 +174,8 @@ export default function UsersAdmin() {
             </tbody>
           </table>
         </div>
-
+        {/* Pagination controls */}
+        <PaginationControls handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} page={page} hasMore={hasMore} />
         <AnimatePresence>
           {menu.isOpen && <AdminMenuDrawer />}
         </AnimatePresence>

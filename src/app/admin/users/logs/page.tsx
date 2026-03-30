@@ -6,33 +6,67 @@ import { useAdminMenu } from "@/lib/menu";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
+interface PageResponse<T> {
+  content: T[];
+  first: boolean;
+  last: boolean;
+  number: number; // página atual (zero-based)
+  totalPages: number;
+  size: number;
+  totalElements: number;
+}
+
 export default function UserActivityLogs() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedPage = localStorage.getItem("usersLogsAdminPage");
+      return savedPage ? parseInt(savedPage, 10) : 0;
+    }
+    return 0;
+  });
+  const [totalPages, setTotalPages] = useState(0);
   const menu = useAdminMenu();
 
-  useEffect(() => {
-    async function fetchLogs() {
-      try {
-        const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "logs/users");
-        
-        let data;
-        try {
-          data = await res.json();
-        } catch {
-          data = [];
-        }
+  const fetchLogs = async (pageNumber: number) => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}logs/users?page=${pageNumber}&size=6`
+      );
+      const data: PageResponse<Log> = await res.json();
 
-        setLogs(data);
-      } catch (err) {
-        console.error("Erro ao buscar logs:", err);
-      } finally {
-        setLoading(false);
-      }
+      setLogs(data.content);
+      setPage(data.number);
+      setTotalPages(data.totalPages);
+    } catch (err) {
+      console.error("Erro ao buscar logs:", err);
+      setLogs([]);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    fetchLogs();
-  }, []);
+  useEffect(() => {
+    fetchLogs(page);
+  }, [page]);
+
+  const handlePrev = () => {
+    if (page > 0) {
+      const newPage = page - 1;
+      setPage(newPage);
+      localStorage.setItem("usersLogsAdminPage", newPage.toString());
+    }
+  };
+
+  const handleNext = () => {
+    if (page + 1 < totalPages) {
+      const newPage = page + 1;
+      setPage(newPage);
+      localStorage.setItem("usersLogsAdminPage", newPage.toString());
+    }
+  };
 
   if (loading) {
     return (
@@ -48,9 +82,10 @@ export default function UserActivityLogs() {
         <h2 className="text-2xl font-semibold mb-6 text-[var(--text-dark)]">
           Logs of Users Activities
         </h2>
+
         <div className="overflow-x-auto border border-[var(--soft-border)] rounded-xl">
           <table className="min-w-full bg-[var(--bg-card)] rounded-xl overflow-hidden">
-                        <thead className="bg-[var(--bg-soft)]">
+            <thead className="bg-[var(--bg-soft)]">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">
                   Timestamp
@@ -94,6 +129,27 @@ export default function UserActivityLogs() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-between items-center mt-4">
+          <button
+            onClick={handlePrev}
+            disabled={page === 0}
+            className="px-4 py-2 cs bg-[var(--bg-secondary)] rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="text-[var(--text-secondary)]">
+            Page {page + 1} of {totalPages}
+          </span>
+          <button
+            onClick={handleNext}
+            disabled={page + 1 >= totalPages}
+            className="px-4 py-2 cs bg-[var(--bg-secondary)] rounded disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
       </div>
 

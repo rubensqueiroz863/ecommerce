@@ -7,6 +7,12 @@ import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
 import { useAdminMenu } from "@/lib/menu";
 import { UserProps } from "@/app/types/user";
 import { io } from "socket.io-client";
+import PaginationControls from "@/app/components/PaginationControls";
+
+interface PageResponse<T> {
+  data: T[];
+  hasMore: boolean;
+}
 
 export default function UsersAdmin() {
   const [users, setUsers] = useState<UserProps[]>([]);
@@ -14,32 +20,19 @@ export default function UsersAdmin() {
   const [changedRoles, setChangedRoles] = useState<Record<string, UserProps["role"]>>({});
   const [saving, setSaving] = useState(false);
 
+  const [page, setPage] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedPage = localStorage.getItem("usersRolesAdminPage");
+      return savedPage ? parseInt(savedPage, 10) : 0;
+    }
+    return 0;
+  });
+  const [hasMore, setHasMore] = useState(false);
+
   const router = useRouter();
   const menu = useAdminMenu();
 
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "users");
-
-        let data;
-        try {
-          data = await res.json();
-        } catch {
-          data = [];
-        }
-
-        setUsers(data);
-      } catch (err) {
-        console.error("Error in fetching users:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchUsers();
-  }, []);
-
+  // WebSocket updates
   useEffect(() => {
     const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_API_URL);
 
@@ -82,6 +75,30 @@ export default function UsersAdmin() {
     };
   }, []);
 
+  // Fetch users com paginação
+  useEffect(() => {
+    localStorage.setItem("usersRolesAdminPage", page.toString()); // salva a página
+
+    async function fetchUsers() {
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}users?page=${page}&size=12`
+        );
+        const data: PageResponse<UserProps> = await res.json();
+        setUsers(data.data);
+        setHasMore(data.hasMore);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        setUsers([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchUsers();
+  }, [page]);
+
   const handleRoleChange = (userId: string, role: UserProps["role"]) => {
     setChangedRoles(prev => ({ ...prev, [userId]: role }));
   };
@@ -100,7 +117,7 @@ export default function UsersAdmin() {
             id: user.id,
             email: user.email,
             password: null,
-            role: role,
+            role,
             name: user.name
           };
 
@@ -119,13 +136,21 @@ export default function UsersAdmin() {
       );
 
       setChangedRoles({});
-      alert("Success in changing roles!");
+      alert("Roles updated successfully!");
     } catch (err) {
       console.error(err);
-      alert("Error in changing roles.");
+      alert("Error updating roles.");
     } finally {
       setSaving(false);
     }
+  };
+
+  const handlePrevPage = () => {
+    if (page > 0) setPage(page - 1);
+  };
+
+  const handleNextPage = () => {
+    if (hasMore) setPage(page + 1);
   };
 
   if (loading) {
@@ -151,7 +176,6 @@ export default function UsersAdmin() {
         <td className="p-3 text-[var(--text-muted)]">{user.id}</td>
         <td className="p-3 font-medium text-[var(--text-main)]">{user.name}</td>
         <td className="p-3 text-[var(--text-secondary)]">{user.email}</td>
-
         <td className="p-3">
           <select
             onClick={e => e.stopPropagation()}
@@ -169,10 +193,10 @@ export default function UsersAdmin() {
     ));
 
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] px-6 py-12 flex flex-col gap-10 max-w-6xl mx-auto">
+    <div className="min-h-screen bg-[var(--bg-main)] px-6 flex flex-col max-w-6xl pb-4 mx-auto">
       <h2 className="text-xl font-semibold mt-4 text-[var(--text-dark)]">Admins</h2>
       <div className="overflow-x-auto rounded-lg shadow">
-        <table className="min-w-[700px] w-full bg-[var(--bg-card)] rounded-xl border border-[var(--soft-border)]">
+        <table className="min-w-[700px] w-full bg-[var(--bg-card)] rounded-t-xl border border-[var(--soft-border)]">
           <thead className="bg-[var(--bg-secondary)] sticky top-0">
             <tr>
               <th className="text-left p-3 text-[var(--text-secondary)]">ID</th>
@@ -184,10 +208,10 @@ export default function UsersAdmin() {
           <tbody>{renderRows(admins)}</tbody>
         </table>
       </div>
+
       <h2 className="text-xl font-semibold mt-4 text-[var(--text-dark)]">Users</h2>
       <div className="overflow-x-auto rounded-lg shadow">
-        
-        <table className="min-w-[700px] w-full bg-[var(--bg-card)] rounded-xl border border-[var(--soft-border)]">
+        <table className="min-w-[700px] w-full bg-[var(--bg-card)] rounded-t-xl border border-[var(--soft-border)]">
           <thead className="bg-[var(--bg-secondary)] sticky top-0">
             <tr>
               <th className="text-left p-3 text-[var(--text-secondary)]">ID</th>
@@ -200,7 +224,8 @@ export default function UsersAdmin() {
         </table>
       </div>
 
-      {/** Save Button **/}
+      <PaginationControls handleNextPage={handleNextPage} handlePrevPage={handlePrevPage} page={page} hasMore={hasMore} />
+      
       {Object.keys(changedRoles).length > 0 && (
         <div className="flex justify-end mt-4">
           <button

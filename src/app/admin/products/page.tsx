@@ -10,6 +10,7 @@ import { PageResponse } from "@/app/types/pageResponse";
 import { SubCategoryProps } from "@/app/types/category";
 import SubCategory from "@/app/components/SubCategory";
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
+import TableSkeleton from "@/app/components/TableSkeleton";
 
 export default function ProductsAdmin() {
   const [subCategories, setSubCategories] = useState<SubCategoryProps[]>([]);
@@ -90,7 +91,7 @@ export default function ProductsAdmin() {
           ref={ref}
           className="py-4 mb-125 text-center text-sm text-(--text-dark)"
         >
-          {loading ? "Loading..." : "Loading more..."}
+          {loading ? <TableSkeleton /> : "Loading more..."}
         </div>
       )}
       <div className="w-full h-px bg-(--soft-border) mt-30 md:mt-35" />

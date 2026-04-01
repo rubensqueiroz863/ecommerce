@@ -28,6 +28,7 @@ export default function AdminMenuDrawer() {
         { label: "Manage Products", onClick: () => router.push("/admin/products") },
         { label: "Add Product", onClick: () => router.push("/admin/products/register") },
         { label: "Categories" },
+        { label: "Activity Logs", onClick: () => router.push("/admin/products/logs") },
         { label: "Inventory" },
       ],
     },

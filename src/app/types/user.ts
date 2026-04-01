@@ -5,7 +5,7 @@ export type UserProps = {
   role: "ROLE_USER" | "ROLE_ADMIN";
 };
 
-export type Log = {
+export type UserLog = {
   id: string;
   userId: string;
   performedBy: string;

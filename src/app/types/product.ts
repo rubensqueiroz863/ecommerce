@@ -27,3 +27,12 @@ export type ProductPageProps = {
     id: string
   }>
 }
+
+export type ProductLog = {
+  id: string;
+  productId: string;
+  performedBy: string;
+  action: string;
+  details: string;
+  timestamp: string;
+};

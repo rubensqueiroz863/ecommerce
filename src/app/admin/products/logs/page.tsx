@@ -2,7 +2,7 @@
 
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
 import TableSkeleton from "@/app/components/TableSkeleton";
-import { UserLog } from "@/app/types/user";
+import { ProductLog } from "@/app/types/product";
 import { useAdminMenu } from "@/lib/menu";
 import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -17,12 +17,12 @@ interface PageResponse<T> {
   totalElements: number;
 }
 
-export default function UserActivityLogs() {
-  const [logs, setLogs] = useState<UserLog[]>([]);
+export default function ProductActivityLogs() {
+  const [logs, setLogs] = useState<ProductLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(() => {
     if (typeof window !== "undefined") {
-      const savedPage = localStorage.getItem("usersLogsAdminPage");
+      const savedPage = localStorage.getItem("productsLogsAdminPage");
       return savedPage ? parseInt(savedPage, 10) : 0;
     }
     return 0;
@@ -34,9 +34,9 @@ export default function UserActivityLogs() {
     setLoading(true);
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}logs/users?page=${pageNumber}&size=6`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}logs/products?page=${pageNumber}&size=6`
       );
-      const data: PageResponse<UserLog> = await res.json();
+      const data: PageResponse<ProductLog> = await res.json();
 
       setLogs(data.content);
       setPage(data.number);
@@ -57,7 +57,7 @@ export default function UserActivityLogs() {
     if (page > 0) {
       const newPage = page - 1;
       setPage(newPage);
-      localStorage.setItem("usersLogsAdminPage", newPage.toString());
+      localStorage.setItem("productsLogsAdminPage", newPage.toString());
     }
   };
 
@@ -65,7 +65,7 @@ export default function UserActivityLogs() {
     if (page + 1 < totalPages) {
       const newPage = page + 1;
       setPage(newPage);
-      localStorage.setItem("usersLogsAdminPage", newPage.toString());
+      localStorage.setItem("productsLogsAdminPage", newPage.toString());
     }
   };
 
@@ -79,7 +79,7 @@ export default function UserActivityLogs() {
     <div className="min-h-screen bg-[var(--bg-main)] px-6 py-10">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-2xl font-semibold mb-6 text-[var(--text-dark)]">
-          Logs of Users Activities
+          Logs of Products Activities
         </h2>
 
         <div className="overflow-x-auto border border-[var(--soft-border)] rounded-xl">
@@ -93,7 +93,7 @@ export default function UserActivityLogs() {
                   Action
                 </th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">
-                  User
+                  Product
                 </th>
                 <th className="px-4 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">
                   By
@@ -116,7 +116,7 @@ export default function UserActivityLogs() {
                     {log.action}
                   </td>
                   <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">
-                    {log.userId}
+                    {log.productId}
                   </td>
                   <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">
                     {log.performedBy}

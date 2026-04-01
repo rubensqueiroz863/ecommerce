@@ -1,6 +1,7 @@
 "use client";
 
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
+import TableSkeleton from "@/app/components/TableSkeleton";
 import { Log } from "@/app/types/user";
 import { useAdminMenu } from "@/lib/menu";
 import { AnimatePresence } from "framer-motion";
@@ -70,9 +71,7 @@ export default function UserActivityLogs() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center">
-        <p className="text-[var(--text-muted)]">Loading logs...</p>
-      </div>
+      <TableSkeleton />
     );
   }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
@@ -8,6 +8,7 @@ import { useAdminMenu } from "@/lib/menu";
 import { UserProps } from "@/app/types/user";
 import { io } from "socket.io-client";
 import PaginationControls from "@/app/components/PaginationControls";
+import TableSkeleton from "@/app/components/TableSkeleton";
 
 interface PageResponse<T> {
   data: T[];
@@ -27,12 +28,34 @@ export default function UsersAdmin() {
     }
     return 0;
   });
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedSearch = localStorage.getItem("usersRolesAdminSearch");
+      return savedSearch ? savedSearch : "";
+    }
+    return "";
+  });
+  
   const [hasMore, setHasMore] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   const router = useRouter();
   const menu = useAdminMenu();
 
-  // WebSocket updates
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 800);
+
+    return () => clearTimeout(timeout);
+  }, [search]);
+
   useEffect(() => {
     const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_API_URL);
 
@@ -75,16 +98,19 @@ export default function UsersAdmin() {
     };
   }, []);
 
-  // Fetch users com paginação
   useEffect(() => {
-    localStorage.setItem("usersRolesAdminPage", page.toString()); // salva a página
+    localStorage.setItem("usersRolesAdminPage", page.toString());
+    localStorage.setItem("usersRolesAdminSearch", search);
 
     async function fetchUsers() {
       setLoading(true);
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}users?page=${page}&size=12`
-        );
+        const url = search
+          ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}users/search?name=${search}&page=${page}&size=6`
+          : `${process.env.NEXT_PUBLIC_BACKEND_API_URL}users?page=${page}&size=6`;
+
+        const res = await fetch(url);
+        
         const data: PageResponse<UserProps> = await res.json();
         setUsers(data.data);
         setHasMore(data.hasMore);
@@ -97,7 +123,7 @@ export default function UsersAdmin() {
     }
 
     fetchUsers();
-  }, [page]);
+  }, [page, debouncedSearch]);
 
   const handleRoleChange = (userId: string, role: UserProps["role"]) => {
     setChangedRoles(prev => ({ ...prev, [userId]: role }));
@@ -155,9 +181,7 @@ export default function UsersAdmin() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--bg-main)] flex items-center justify-center">
-        <p className="text-[var(--text-muted)]">Loading Users...</p>
-      </div>
+      <TableSkeleton />
     );
   }
 
@@ -193,7 +217,19 @@ export default function UsersAdmin() {
     ));
 
   return (
-    <div className="min-h-screen bg-[var(--bg-main)] px-6 flex flex-col max-w-6xl pb-4 mx-auto">
+    <div className="min-h-screen bg-[var(--bg-main)] px-6 pt-10 flex flex-col max-w-6xl pb-4 mx-auto">
+      <input
+        ref={inputRef}
+        autoFocus
+        type="text"
+        placeholder="Search users..."
+        value={search}
+        onChange={(e) => {
+          setSearch(e.target.value);
+          setPage(0);
+        }}
+        className="mb-4 w-full max-w-md p-2 rounded-lg border border-[var(--soft-border)] bg-[var(--bg-card)] text-[var(--text-main)]"
+      />
       <h2 className="text-xl font-semibold mt-4 text-[var(--text-dark)]">Admins</h2>
       <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-[700px] w-full bg-[var(--bg-card)] rounded-t-xl border border-[var(--soft-border)]">
@@ -210,8 +246,8 @@ export default function UsersAdmin() {
       </div>
 
       <h2 className="text-xl font-semibold mt-4 text-[var(--text-dark)]">Users</h2>
-      <div className="overflow-x-auto rounded-lg shadow">
-        <table className="min-w-[700px] w-full bg-[var(--bg-card)] rounded-t-xl border border-[var(--soft-border)]">
+      <div className="overflow-x-auto rounded-t-xl shadow">
+        <table className="min-w-[700px] w-full bg-[var(--bg-card)] border border-[var(--soft-border)]">
           <thead className="bg-[var(--bg-secondary)] sticky top-0">
             <tr>
               <th className="text-left p-3 text-[var(--text-secondary)]">ID</th>

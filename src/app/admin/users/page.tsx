@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import AdminMenuDrawer from "@/app/components/AdminMenuDrawer";
@@ -8,6 +8,7 @@ import { useAdminMenu } from "@/lib/menu";
 import { UserProps } from "@/app/types/user";
 import { io } from "socket.io-client";
 import PaginationControls from "@/app/components/PaginationControls";
+import TableSkeleton from "@/app/components/TableSkeleton";
 
 interface PageResponse<T> {
   data: T[];
@@ -24,12 +25,33 @@ export default function UsersAdmin() {
     }
     return 0;
   });
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedSearch = localStorage.getItem("usersAdminSearch");
+      return savedSearch ? savedSearch : "";
+    }
+    return "";
+  });
+
   const [hasMore, setHasMore] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   const router = useRouter();
   const menu = useAdminMenu();
 
-  // WebSocket updates
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 800);
+
+    return () => clearTimeout(timeout);
+  }, [search]);
+
   useEffect(() => {
     const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_API_URL);
 
@@ -65,16 +87,18 @@ export default function UsersAdmin() {
     };
   }, []);
 
-  // Fetch users with pagination
   useEffect(() => {
     localStorage.setItem("usersAdminPage", page.toString());
+    localStorage.setItem("usersAdminSearch", search);
 
     async function fetchUsers() {
       setLoading(true);
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}users?page=${page}&size=10`
-        );
+        const url = search
+          ? `${process.env.NEXT_PUBLIC_BACKEND_API_URL}users/search?name=${search}&page=${page}&size=6`
+          : `${process.env.NEXT_PUBLIC_BACKEND_API_URL}users?page=${page}&size=6`;
+
+        const res = await fetch(url);
         const data: PageResponse<UserProps> = await res.json();
         setUsers(data.data);
         setHasMore(data.hasMore);
@@ -87,7 +111,7 @@ export default function UsersAdmin() {
     }
 
     fetchUsers();
-  }, [page]);
+  }, [page, debouncedSearch]);
 
   const handleDelete = async (userId: string) => {
     if (!confirm("Want to delete user?")) return;
@@ -112,9 +136,7 @@ export default function UsersAdmin() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-main)]">
-        <p className="text-[var(--text-muted)]">Loading Users...</p>
-      </div>
+      <TableSkeleton />
     );
   }
 
@@ -122,6 +144,18 @@ export default function UsersAdmin() {
     <div className="w-full">
       <div className="min-h-screen bg-[var(--bg-main)] w-full p-10 flex flex-col items-center">
         <div className="w-full max-w-6xl overflow-x-auto rounded-t-xl">
+          <input
+            ref={inputRef}
+            autoFocus
+            type="text"
+            placeholder="Search users..."
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(0);
+            }}
+            className="mb-4 w-full max-w-md p-2 rounded-lg border border-[var(--soft-border)] bg-[var(--bg-card)] text-[var(--text-main)]"
+          />
           <table className="min-w-[700px] w-full bg-[var(--bg-card)] shadow-md border border-[var(--soft-border)]">
             <thead className="bg-[var(--bg-secondary)]">
               <tr>

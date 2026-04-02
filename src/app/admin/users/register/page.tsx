@@ -9,6 +9,7 @@ export default function RegisterUsersAdmin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
 
   const menu = useAdminMenu();
 
@@ -19,9 +20,35 @@ export default function RegisterUsersAdmin() {
     }
   }, [successMessage]);
 
+  const handleApiError = (data: any) => {
+    setFieldErrors({});
+
+    switch (data.code) {
+      case "EMAIL_ALREADY_EXISTS":
+        setFieldErrors({ email: "This email is already in use." });
+        break;
+
+      case "INVALID_EMAIL":
+        setFieldErrors({ email: data.message });
+        break;
+
+      case "WEAK_PASSWORD":
+        setFieldErrors({ password: data.message });
+        break;
+
+      case "INVALID_NAME":
+        setFieldErrors({ nome: data.message });
+        break;
+
+      default:
+        setError(data.message || "Server error.");
+    }
+  };
+
   const handleUser = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
 
     const form = e.currentTarget;
 
@@ -38,7 +65,7 @@ export default function RegisterUsersAdmin() {
     setLoading(true);
 
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "users", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +86,7 @@ export default function RegisterUsersAdmin() {
       }
 
       if (!res.ok) {
-        setError(data?.message || "Error in Server.");
+        handleApiError(data);
         return;
       }
 
@@ -91,33 +118,38 @@ export default function RegisterUsersAdmin() {
         <h1 className="text-2xl font-semibold text-[var(--text-main)] mb-6 text-center">
           Register User
         </h1>
-        <form
-          onSubmit={handleUser}
-          className="flex flex-col gap-4"
-        >
+        <form onSubmit={handleUser} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label className="text-sm text-[var(--text-secondary)]">Name</label>
             <input
               name="nome"
               type="text"
+              required
               className="bg-[var(--bg-soft)] text-[var(--text-main)] border border-[var(--soft-border)] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
             />
+            {fieldErrors.nome && <p className="text-[var(--error)] text-sm">{fieldErrors.nome}</p>}
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm text-[var(--text-secondary)]">Email</label>
             <input
               name="email"
               type="email"
+              required
               className="bg-[var(--bg-soft)] text-[var(--text-main)] border border-[var(--soft-border)] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
             />
+            {fieldErrors.email && <p className="text-[var(--error)] text-sm">{fieldErrors.email}</p>}
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm text-[var(--text-secondary)]">Password</label>
             <input
               name="password"
               type="password"
+              minLength={8}
+              maxLength={100}
+              required
               className="bg-[var(--bg-soft)] text-[var(--text-main)] border border-[var(--soft-border)] rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)]"
             />
+            {fieldErrors.password && <p className="text-[var(--error)] text-sm">{fieldErrors.password}</p>}
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-sm text-[var(--text-secondary)]">Role</label>
@@ -129,9 +161,7 @@ export default function RegisterUsersAdmin() {
               <option value="ROLE_ADMIN">Admin</option>
             </select>
           </div>
-          {error && (
-            <p className="text-sm text-[var(--error)] text-center">{error}</p>
-          )}
+          {error && <p className="text-sm text-[var(--error)] text-center">{error}</p>}
           <button
             type="submit"
             disabled={loading}

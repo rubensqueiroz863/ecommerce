@@ -13,6 +13,26 @@ export default function LoginClient({ redirectTo }: Readonly<RedirectProps>) {
 
   const router = useRouter();
 
+  const handleLoginError = (data: any) => {
+    switch (data.code) {
+      case "INVALID_CREDENTIALS":
+        setError("Email or password is incorrect.");
+        break;
+
+      // Futuramente
+      case "ACCOUNT_DISABLED":
+        setError("Your account is disabled. Contact support.");
+        break;
+
+      case "INTERNAL_ERROR":
+        setError("Something went wrong. Try again later.");
+        break;
+
+      default:
+        setError(data.message || "Server error.");
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
@@ -44,7 +64,7 @@ export default function LoginClient({ redirectTo }: Readonly<RedirectProps>) {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Server error.");
+        handleLoginError(data);
         return;
       }
 
@@ -53,6 +73,7 @@ export default function LoginClient({ redirectTo }: Readonly<RedirectProps>) {
       document.cookie = `token=${data.token}; path=/`;
 
       router.push(redirectTo || "/");
+
     } catch (err) {
       console.error(err);
       setError("Error signing in.");
@@ -82,21 +103,22 @@ export default function LoginClient({ redirectTo }: Readonly<RedirectProps>) {
             type="email"
             placeholder="Enter your email..."
             required
-            className="bg-[var(--bg-soft)] border border-[var(--soft-border)] rounded-lg p-3 text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] transition"
+            className={`${error ? "border-red-500" : ""} bg-[var(--bg-soft)] border border-[var(--soft-border)] rounded-lg p-3 text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] transition`}
           />
         </div>
         <div className="flex flex-col gap-1">
           <label className="text-sm text-[var(--text-secondary)]">
             Password
           </label>
-
           <div className="relative flex items-center">
             <input
               name="password"
               type={isShowingPassword ? "text" : "password"}
               placeholder="Enter your password..."
               required
-              className="w-full bg-[var(--bg-soft)] border border-[var(--soft-border)] rounded-lg p-3 pr-12 text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] transition"
+              minLength={8}
+              maxLength={100}
+              className={`${error ? "border-red-500" : ""} w-full bg-[var(--bg-soft)] border border-[var(--soft-border)] rounded-lg p-3 pr-12 text-[var(--text-main)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)] transition`}
             />
 
             <button

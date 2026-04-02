@@ -15,6 +15,7 @@ import { SearchProps } from "@/app/types/search";
 import { useMenu } from "@/lib/menu";
 import { useCart } from "@/lib/cart";
 import { useAuth } from "@/hooks/useAuth";
+import SkeletonSubCategory from "@/app/components/SkeletonSubCategory";
 
 // Tipagem das recomendações
 export interface UserRecommendation {
@@ -132,15 +133,7 @@ export default function SearchClient({ query }: SearchProps) {
         </div>
       )}
       {loading && !searched && (
-        <ul className="grid mt-20 grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-6 px-4 md:px-8">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="flex flex-col gap-2 animate-pulse">
-              <div className="bg-[var(--bg-card)] w-full h-40 rounded-md"></div>
-              <div className="h-4 bg-[var(--bg-card)] rounded w-3/4"></div>
-              <div className="h-4 bg-[var(--bg-card)] rounded w-1/2"></div>
-            </div>
-          ))}
-        </ul>
+        <SkeletonSubCategory count={12}/>
       )}
       {!loading && results.length > 0 && (
         <ul className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 2xl:grid-cols-6 gap-6 px-4">

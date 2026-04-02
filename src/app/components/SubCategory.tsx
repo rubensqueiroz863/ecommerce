@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { OpenSans } from "@/lib/fonts";
 import { SubCategoryProps } from "../types/category";
 import { io, Socket } from "socket.io-client";
+import SkeletonSubCategory from "./SkeletonSubCategory";
 
 interface SubCategoryPropsWithSocket extends SubCategoryProps {
   socket: Socket | null;
@@ -132,7 +133,7 @@ export default function SubCategory({ id, name, slug, role, socket }: SubCategor
     );
   }
 
-  if (products.length === 0) return null;
+  if (!products || products.length === 0) return null;
 
   if (role === "user") {
     return (
@@ -171,7 +172,7 @@ export default function SubCategory({ id, name, slug, role, socket }: SubCategor
             </div>
           ))}
         </div>
-        {hasMore && <p className="text-sm text-gray-400 mt-2">Loading more products…</p>}
+        {hasMore && <SkeletonSubCategory count={12} />}
       </motion.div>
     );
   }

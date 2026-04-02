@@ -24,6 +24,7 @@ import CategoriesCard from "./components/CategoriesCard";
 import { OpenSans } from "@/lib/fonts";
 import CategoryCard from "./components/CategoryCard";
 import HeroCard from "./components/HeroCard";
+import SkeletonSubCategory from "./components/SkeletonSubCategory";
 
 interface MostClickedProductDTO {
   product: ProductProps;
@@ -213,7 +214,7 @@ export default function HomePage() {
 
       {hasMore && (
         <div ref={ref} className="py-4 mb-125 text-center text-sm text-gray-400">
-          {loading ? "Loading..." : "Loading more..."}
+          <SkeletonSubCategory count={12} />
         </div>
       )}
 

@@ -85,7 +85,6 @@ export default function ProductClient({ id }: Readonly<ProductClientProps>) {
             />
           </div>
 
-          {/* Detalhes do produto */}
           <div className="flex flex-col gap-4">
             <h1 className="text-3xl font-bold text-[var(--text-dark)]">
               {product?.name}

@@ -27,7 +27,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
   async function fetchLastSearchs(userId: string) {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}searchs/${userId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}searches/${userId}`,
         {
           headers: { Accept: "application/json" },
         }
@@ -36,7 +36,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
       if (!res.ok) throw new Error(`Erro ao buscar historico: ${res.status}`);
       
       const data: SearchHistoryDTO[] = await res.json();
-      
+      console.log(data)
       return data;
 
     } catch (err) {
@@ -47,7 +47,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
 
   async function registerSearch(query: string, userEmail: string) {
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "searchs", {
+      const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_API_URL + "searches", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

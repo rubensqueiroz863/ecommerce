@@ -27,7 +27,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
   async function fetchLastSearchs(userId: string) {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}searches/${userId}`,
+        `https://search-api-xamv.onrender.com/users/${userId}`,
         {
           headers: { Accept: "application/json" },
         }
@@ -97,7 +97,7 @@ export default function NavBar({ onSearch }: Readonly<NavBarProps>) {
 
   useEffect(() => {
     if (!query) {
-      setSuggestions(lastSearchs); // mostra histórico completo se não digitar nada
+      setSuggestions(lastSearchs);
     } else {
       const filtered = lastSearchs.filter(item =>
         item.query.toLowerCase().includes(query.toLowerCase())

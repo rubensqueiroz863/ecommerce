@@ -60,6 +60,7 @@ export default function SearchClient({ query }: SearchProps) {
   const router = useRouter();
   const menu = useMenu();
   const cart = useCart();
+  const decodedQuery = decodeURIComponent(query);
 
   const { user } = useAuth();
 
@@ -72,7 +73,7 @@ export default function SearchClient({ query }: SearchProps) {
 
       try {
         const params = new URLSearchParams({
-          q: query,
+          q: decodedQuery,
           page: pageNum.toString(),
           limit: "12",
           fuzzy: "true",
@@ -84,7 +85,7 @@ export default function SearchClient({ query }: SearchProps) {
           price_min: 1000,
           price_max: 9000,
           //subcategory: "Smartphones",
-          name_contains: query
+          name_contains: decodedQuery
         };
 
         Object.entries(filters).forEach(([key, value]) => {
@@ -154,7 +155,7 @@ export default function SearchClient({ query }: SearchProps) {
   }, [user?.id]);
 
   function search(q: string) {
-    router.push(`/search/${q}`);
+    router.push(`/search/${query}`);
   }
 
   if (!query) return null;
@@ -164,7 +165,7 @@ export default function SearchClient({ query }: SearchProps) {
       <NavBar onSearch={search} />
       {searched && (
         <div className="flex flex-col px-4 md:px-8 py-4">
-          <p className="text-xl text-[var(--text-dark)] font-semibold">{query}</p>
+          <p className="text-xl text-[var(--text-dark)] font-semibold">{decodedQuery}</p>
           <p className="text-sm text-[var(--text-secondary)]">{results.length} resultados</p>
         </div>
       )}
